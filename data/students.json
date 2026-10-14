@@ -1,0 +1,45 @@
+{
+  "_note": "모든 학생은 시연용 가상 인물입니다. 실제 학생 정보가 아닙니다.",
+  "students": [
+    {
+      "id": "S01",
+      "display_name": "린 (가상 학생)",
+      "grade": "초등 4학년",
+      "home_language": "vi",
+      "home_language_name": "베트남어",
+      "months_in_korea": 6,
+      "teacher_memo": "한국어 듣기는 조금 가능, 읽기는 아직 어려움. 그림 자료를 좋아함.",
+      "diagnostic_answers": [1, 1, 2, 2, 3]
+    },
+    {
+      "id": "S02",
+      "display_name": "웨이 (가상 학생)",
+      "grade": "초등 4학년",
+      "home_language": "zh",
+      "home_language_name": "중국어",
+      "months_in_korea": 18,
+      "teacher_memo": "일상 대화는 가능. 교과 어휘(한자어)를 어려워함.",
+      "diagnostic_answers": [1, 2, 1, 1, 2]
+    },
+    {
+      "id": "S03",
+      "display_name": "사샤 (가상 학생)",
+      "grade": "초등 5학년",
+      "home_language": "ru",
+      "home_language_name": "러시아어",
+      "months_in_korea": 36,
+      "teacher_memo": "한국어 읽기 대부분 가능. 긴 문장에서 가끔 막힘.",
+      "diagnostic_answers": [1, 2, 1, 2, 1]
+    },
+    {
+      "id": "S04",
+      "display_name": "바트 (가상 학생)",
+      "grade": "초등 4학년",
+      "home_language": "mn",
+      "home_language_name": "몽골어",
+      "months_in_korea": 10,
+      "teacher_memo": "말하기는 적극적. 읽기 속도가 느림.",
+      "diagnostic_answers": [1, 2, 2, 2, 3]
+    }
+  ]
+}
