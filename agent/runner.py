@@ -49,7 +49,13 @@ SYSTEM_PROMPT = """당신은 한국 초등학교 교실의 '포용·다문화 �
 7. 모든 도구 호출의 reason 에 '왜 지금 이 도구를 쓰는지'를 교사가 이해할 수 있는 한국어 한 문장으로 씁니다.
 8. 정해진 기준에 없는 교육적 판단(예: 기준표 밖의 단계 변경)은 스스로 하지 말고, 교사에게 확인을 요청하는 말로 남깁니다.
 9. 번역은 교사 확인용 보조 자료임을 기억하고, 확신이 없는 번역은 teacher_note 에 적습니다.
-10. 다 끝나면 교사에게 무엇을 했는지 쉬운 한국어 2~3문장으로 요약합니다.
+10. 학생용 한국어 글을 만들면 check_known_words 로 이 학생이 모를 낱말을 찾고, 있으면 personalize_wording 으로
+    학생이 아는 말로 바꿉니다. 같은 글이라도 학생마다 아는 낱말이 달라 결과가 달라야 합니다. 교과 핵심 용어는 바꾸지 않습니다.
+    (1단계 학생의 모국어 번역은 personalize_wording 전의 글로 만듭니다.)
+11. 학생이 '좀 더 쉽게'를 요청하면 ease_step 을 요청 횟수로 올려 다시 맞추고 present_personalized 로 보여줍니다.
+    needs_full_rewrite 가 true 면 rewrite_easy_korean(level=1)로 짧게 다시 쓴 뒤 그 글을 맞춥니다.
+12. 또래 연결 요청은 지원 단계를 확인(없으면 진단)한 뒤 find_peer_group → present_peer_group 으로 처리합니다.
+13. 다 끝나면 교사에게 무엇을 했는지 쉬운 한국어 2~3문장으로 요약합니다.
 학생 개인정보는 다루지 않으며, 모든 학생은 가상 인물입니다."""
 
 
@@ -188,3 +194,19 @@ def goal_fading(student_id: str, passage_id: str, results: list[bool]) -> str:
     marks = ", ".join(f"{i + 1}번 {'맞음' if r else '틀림'}" for i, r in enumerate(results))
     return (f"학생 {student_id} 의 수업 후 확인 문제 결과입니다 (지문 {passage_id}): {marks}.\n"
             f"결과를 채점해 비계 단계를 조정하고, 다음 수업 지원 계획을 교사에게 보여 주세요.")
+
+
+def goal_personal(student_id: str, text: str, ease_step: int) -> str:
+    if ease_step == 0:
+        head = (f"학생 {student_id} 에게 아래 글을 보여주려 합니다. 이 학생이 아는 낱말로 맞춰 주세요. "
+                f"(ease_step=0)")
+    else:
+        head = (f"학생 {student_id} 가 \"좀 더 쉽게 설명해 주세요\"라고 했습니다 ({ease_step}번째 요청, ease_step={ease_step}). "
+                f"아래 글을 이 학생이 아는 말로 더 쉽게 맞춰 주세요.")
+    return f"{head}\n\n[글]\n{text}"
+
+
+def goal_peer(student_id: str, mode: str) -> str:
+    kind = "같은 모국어를 쓰는 친구" if mode == "same_language" else "모국어가 서로 달라 한국어로 대화하게 되는 친구"
+    return (f"학생 {student_id} 와 한국어 수준이 비슷한 또래를 지역과 상관없이 찾아 4명 모둠을 만들어 주세요. "
+            f"이번에는 '{kind}'로 묶어 주세요 (mode={mode}).")

@@ -27,6 +27,8 @@ class AgentState:
     levels: dict = field(default_factory=dict)        # 학생ID → 현재 비계 단계
     level_history: dict = field(default_factory=dict)  # 학생ID → [(단계, 이유)]
     outputs: list = field(default_factory=list)        # 화면에 보여줄 최종 결과물
+    last_personal: dict = field(default_factory=dict)  # 학생ID → 마지막 '아는 낱말 맞춤' 결과
+    last_peer: dict = field(default_factory=dict)      # 학생ID → 마지막 또래 연결 결과
 
 
 class ToolError(Exception):
@@ -320,6 +322,218 @@ def present_support_plan(state: AgentState, student_id: str, new_level: int, mes
     return {"shown": True, "_summary": f"지원 계획을 화면에 표시함 ({new_level}단계)"}
 
 
+# ── 10. 학생별 '아는 낱말' 맞춤 (파파고와 다른 점) ──────────────
+# 번역기는 같은 입력에 늘 같은 출력 하나를 낸다. 이 도구들은 '이 학생이 아는 낱말' 안에서
+# 표현을 바꿔, 같은 글이라도 학생마다 다른 글을 만든다.
+
+MARK_OPEN, MARK_CLOSE = "⟦", "⟧"      # 바뀐 표현 표시 (화면에서 형광펜)
+NOTE_OPEN, NOTE_CLOSE = "⟪", "⟫"      # 핵심 용어 풀이 표시
+
+
+def _need_student(student_id: str) -> dict:
+    s = data.student(student_id)
+    if not s:
+        raise ToolError(f"학생 {student_id} 를 찾을 수 없습니다.")
+    return s
+
+
+def _effective_band(s: dict, ease_step: int) -> int:
+    return s["vocab_band"] - ease_step
+
+
+def _pick_option(opts: dict, band: int) -> str:
+    levels = sorted(int(k) for k in opts)
+    ok = [lv for lv in levels if lv <= band]
+    return opts[str(max(ok) if ok else min(levels))]
+
+
+def _scan_words(text: str, s: dict, ease_step: int) -> tuple[list, list]:
+    """글에서 학생이 모를 낱말(바꿀 것)과 아는 낱말(그대로 둘 것)을 찾는다."""
+    band = max(_effective_band(s, ease_step), 0)
+    change, keep = [], []
+    for w in data.word_levels():
+        for form, opts in w["forms"].items():
+            if form not in text:
+                continue
+            observed = w["word"] in s.get("known_extra", [])
+            if w["band"] <= band:
+                keep.append({"word": w["word"], "form": form, "why": f"학생이 아는 수준의 낱말 (난이도 {w['band']} ≤ {band})"})
+            elif observed and ease_step == 0:
+                keep.append({"word": w["word"], "form": form, "why": "교사가 '이 학생은 안다'고 관찰한 낱말"})
+            else:
+                to = _pick_option(opts, band)
+                if to != form:
+                    change.append({"word": w["word"], "form": form, "to": to,
+                                   "why": f"난이도 {w['band']} 낱말 → 학생 수준 {band}에 맞는 말로"})
+    change.sort(key=lambda c: -len(c["form"]))  # 긴 표현부터 바꿔야 겹치지 않는다
+    return change, keep
+
+
+def _core_notes(text: str, band: int, ease_step: int) -> list[dict]:
+    """'좀 더 쉽게'를 요청한 초급 학생에게는 핵심 용어 뒤에 짧은 풀이를 붙인다(용어 자체는 그대로)."""
+    if ease_step < 1 or band > 1:
+        return []
+    notes = []
+    for g in data.glossary():
+        form = next((f for f in g["forms"] if f in text), None)
+        if form and f"{form}(" not in text:
+            notes.append({"word": g["word"], "form": form, "note": g["easy"]})
+    return notes
+
+
+def _insert_note(text: str, form: str, note: str) -> str:
+    """핵심 용어의 첫 등장 뒤에 풀이를 붙인다. 바뀐 표현(⟦…⟧) 안이면 그 표현이 끝난 뒤에 붙인다."""
+    i = text.find(form)
+    if i < 0:
+        return text
+    end = i + len(form)
+    if text.count(MARK_OPEN, 0, i) > text.count(MARK_CLOSE, 0, i):
+        end = text.index(MARK_CLOSE, i) + len(MARK_CLOSE)
+    return text[:end] + note + text[end:]
+
+
+def check_known_words(state: AgentState, student_id: str, text: str, ease_step: int = 0, reason: str = "") -> dict:
+    s = _need_student(student_id)
+    ease_step = int(ease_step)
+    band = _effective_band(s, ease_step)
+    change, keep = _scan_words(text, s, ease_step)
+    notes = _core_notes(text, max(band, 0), ease_step)
+    full = band < 0
+    return {
+        "student_id": student_id,
+        "student_vocab_band": s["vocab_band"],
+        "ease_step": ease_step,
+        "effective_band": max(band, 0),
+        "words_to_change": change,
+        "words_kept": keep,
+        "core_terms_to_explain": [n["word"] for n in notes],
+        "needs_full_rewrite": full,
+        "_summary": (f"학생 낱말 수준 {max(band, 0)} 기준 · 바꿀 낱말 {len(change)}개"
+                     + (f" ({', '.join(c['form'] for c in change[:4])}{'…' if len(change) > 4 else ''})" if change else "")
+                     + f" · 그대로 둘 낱말 {len(keep)}개"
+                     + (" · 낱말 바꾸기만으로는 더 쉽게 할 수 없어 문장 전체를 다시 써야 함" if full else "")),
+    }
+
+
+def personalize_wording(state: AgentState, student_id: str, text: str, ease_step: int = 0,
+                        reason: str = "") -> dict:
+    s = _need_student(student_id)
+    ease_step = int(ease_step)
+    band = max(_effective_band(s, ease_step), 0)
+    change, _ = _scan_words(text, s, ease_step)
+    marked = text
+    for c in change:
+        marked = marked.replace(c["form"], f"{MARK_OPEN}{c['to']}{MARK_CLOSE}")
+    notes = _core_notes(text, band, ease_step)
+    for n in notes:
+        marked = _insert_note(marked, n["form"], f"{NOTE_OPEN}({n['note']}){NOTE_CLOSE}")
+    plain = marked
+    for m in (MARK_OPEN, MARK_CLOSE, NOTE_OPEN, NOTE_CLOSE):
+        plain = plain.replace(m, "")
+    state.last_personal[student_id] = {
+        "input_text": text, "marked_text": marked, "text": plain,
+        "changes": [{"from": c["form"], "to": c["to"]} for c in change],
+        "notes": [n["word"] for n in notes], "ease_step": ease_step, "effective_band": band,
+    }
+    return {
+        "student_id": student_id,
+        "personalized_text": plain,
+        "changes": [{"from": c["form"], "to": c["to"]} for c in change],
+        "explained_terms": [n["word"] for n in notes],
+        "_summary": (f"{len(change)}곳을 이 학생이 아는 말로 바꿈"
+                     + (f" · 핵심 용어 {len(notes)}개에 풀이 붙임" if notes else "")
+                     + (" · 바꿀 낱말 없음(이미 학생 수준)" if not change and not notes else "")),
+    }
+
+
+def present_personalized(state: AgentState, student_id: str, message: str, original_text: str = "",
+                         reason: str = "") -> dict:
+    p = state.last_personal.get(student_id)
+    if not p:
+        raise ToolError("먼저 personalize_wording 으로 학생 맞춤 글을 만들어야 합니다.")
+    state.outputs.append({"kind": "personal", "student_id": student_id, "message": message,
+                          "original_text": original_text or p["input_text"], **p})
+    return {"shown": True, "_summary": f"학생 맞춤 글을 화면에 표시함 (쉽게 {p['ease_step']}단계)"}
+
+
+# ── 11. 지역 너머 또래 연결 (미리보기) ───────────────────────────
+
+def _grade_num(g: str) -> int:
+    m = re.search(r"(\d+)", g or "")
+    return int(m.group(1)) if m else 0
+
+
+ACTIVITIES = {
+    1: "그림 어휘 카드를 보며 낱말 맞히기 게임 (막히면 그림으로 힌트 주기)",
+    2: "오늘 배운 낱말로 짧은 문장 만들기 릴레이",
+    3: "짧은 글을 읽고 한국어로 생각 나누기",
+}
+
+
+def find_peer_group(state: AgentState, student_id: str, mode: str, reason: str = "") -> dict:
+    s = _need_student(student_id)
+    level = state.levels.get(student_id)
+    if level is None:
+        raise ToolError("이 학생의 지원 단계가 아직 없습니다. 먼저 진단으로 단계를 정해 주세요.")
+    if mode not in ("same_language", "mixed_language"):
+        raise ToolError("mode 는 'same_language' 또는 'mixed_language' 여야 합니다.")
+    pool = [dict(p, source="또래 연결망") for p in data.peers()]
+    for o in data.students():  # 우리 반 다른 가상 학생도 단계가 정해졌다면 후보
+        if o["id"] != student_id and state.levels.get(o["id"]):
+            pool.append({"id": o["id"], "display_name": o["display_name"].split(" ")[0], "region": o["region"],
+                         "center": "우리 반", "home_language": o["home_language"],
+                         "home_language_name": o["home_language_name"], "level": state.levels[o["id"]],
+                         "grade": o["grade"], "interests": [], "source": "우리 반"})
+    lang = s["home_language"]
+    if mode == "same_language":
+        cands = [p for p in pool if p["home_language"] == lang]
+    else:
+        cands = [p for p in pool if p["home_language"] != lang]
+    cands = [p for p in cands if abs(p["level"] - level) <= 1]
+    my_grade = _grade_num(s["grade"])
+    cands.sort(key=lambda p: (abs(p["level"] - level), abs(_grade_num(p["grade"]) - my_grade)))
+
+    group, used_langs = [], {lang}
+    if mode == "mixed_language":  # 모국어가 겹치지 않게 먼저 고르고, 모자라면 채운다
+        for p in cands:
+            if len(group) < 3 and p["home_language"] not in used_langs:
+                group.append(p)
+                used_langs.add(p["home_language"])
+    for p in cands:
+        if len(group) < 3 and p not in group:
+            group.append(p)
+
+    local = [p for p in cands if p["region"] == s["region"]]
+    members = []
+    for p in group:
+        why = ["같은 단계" if p["level"] == level else f"단계 차이 1 ({p['level']}단계)"]
+        if _grade_num(p["grade"]) == my_grade:
+            why.append("같은 학년")
+        why.append("같은 지역" if p["region"] == s["region"] else f"다른 지역({p['region']})")
+        members.append({"name": p["display_name"], "region": p["region"], "center": p["center"],
+                        "language": p["home_language_name"], "level": p["level"], "grade": p["grade"],
+                        "interests": p.get("interests", []), "why": " · ".join(why)})
+    talk = ("서로 모국어가 달라서, 모둠 안의 공통 언어는 한국어가 됩니다. 자연스럽게 한국어로 말할 기회가 늘어나요."
+            if mode == "mixed_language" else
+            "같은 모국어 친구와 어려운 개념을 모국어로 먼저 이해하고, 한국어 표현으로 함께 정리해요.")
+    result = {
+        "student": s["display_name"], "student_region": s["region"], "level": level, "mode": mode,
+        "members": members, "local_candidates": len(local), "nationwide_candidates": len(cands),
+        "activity": ACTIVITIES[level], "talk_language": talk,
+    }
+    state.last_peer[student_id] = result
+    return {**result, "_summary": (f"조건에 맞는 친구: 같은 지역 {len(local)}명 → 지역을 넘으면 {len(cands)}명 · "
+                                   f"모둠 {len(members) + 1}명 구성")}
+
+
+def present_peer_group(state: AgentState, student_id: str, message: str, reason: str = "") -> dict:
+    p = state.last_peer.get(student_id)
+    if not p:
+        raise ToolError("먼저 find_peer_group 으로 모둠을 만들어야 합니다.")
+    state.outputs.append({"kind": "peers", "student_id": student_id, "message": message, **p})
+    return {"shown": True, "_summary": f"또래 모둠 {len(p['members']) + 1}명을 화면에 표시함"}
+
+
 # ── Claude 에게 보여줄 도구 설명 ──────────────────────────────────
 
 _REASON = {"type": "string", "description": "지금 이 도구를 쓰는 이유. 교사가 화면에서 읽을 한국어 한 문장."}
@@ -398,6 +612,35 @@ TOOL_SCHEMAS = [
                               "message_to_teacher": {"type": "string"},
                               "next_steps": {"type": "array", "items": {"type": "string"}}},
                              ["student_id", "new_level", "message_to_teacher", "next_steps"])},
+    {"name": "check_known_words",
+     "description": "학생별 '아는 낱말' 기록(낱말 수준 + 교사 관찰)과 비교해, 글에서 이 학생이 모를 낱말과 그대로 둬도 되는 낱말을 찾는다. "
+                    "ease_step 은 학생이 '좀 더 쉽게'를 요청한 횟수(0=처음)로, 클수록 더 쉬운 말을 쓴다. "
+                    "needs_full_rewrite 가 true 면 낱말 바꾸기만으로는 부족하니 rewrite_easy_korean(level=1)로 먼저 다시 쓴다.",
+     "input_schema": _schema({"student_id": {"type": "string"}, "text": {"type": "string"},
+                              "ease_step": {"type": "integer", "minimum": 0}}, ["student_id", "text"])},
+    {"name": "personalize_wording",
+     "description": "check_known_words 기준대로 글의 어려운 표현을 이 학생이 아는 말로 바꾼다. 교과 핵심 용어는 바꾸지 않고, "
+                    "'좀 더 쉽게'를 요청한 초급 학생에게는 핵심 용어 뒤에 짧은 풀이를 붙인다. 같은 글도 학생마다 결과가 다르다.",
+     "input_schema": _schema({"student_id": {"type": "string"}, "text": {"type": "string"},
+                              "ease_step": {"type": "integer", "minimum": 0}}, ["student_id", "text"])},
+    {"name": "present_personalized",
+     "description": "personalize_wording 으로 만든 학생 맞춤 글(바뀐 곳 표시)을 원래 글과 함께 화면에 보여준다.",
+     "input_schema": _schema({"student_id": {"type": "string"},
+                              "original_text": {"type": "string", "description": "교사가 처음 준 글"},
+                              "message": {"type": "string", "description": "학생에게 건네는 짧은 쉬운 한국어 한마디"}},
+                             ["student_id", "message"])},
+    {"name": "find_peer_group",
+     "description": "지역과 상관없이 한국어 지원 단계와 학년이 비슷한 또래를 찾아 4명 모둠을 만든다. "
+                    "mode='same_language' 는 같은 모국어 친구끼리, mode='mixed_language' 는 모국어가 서로 달라 한국어로 대화하는 모둠. "
+                    "같은 지역 안 후보 수와 전국 후보 수도 알려준다. 학생의 지원 단계가 먼저 정해져 있어야 한다.",
+     "input_schema": _schema({"student_id": {"type": "string"},
+                              "mode": {"type": "string", "enum": ["same_language", "mixed_language"]}},
+                             ["student_id", "mode"])},
+    {"name": "present_peer_group",
+     "description": "find_peer_group 으로 만든 또래 모둠과 함께 할 활동을 화면에 보여준다.",
+     "input_schema": _schema({"student_id": {"type": "string"},
+                              "message": {"type": "string", "description": "교사에게 주는 짧은 안내"}},
+                             ["student_id", "message"])},
 ]
 
 TOOL_FUNCS = {
@@ -413,6 +656,11 @@ TOOL_FUNCS = {
     "present_lesson_material": present_lesson_material,
     "present_bilingual": present_bilingual,
     "present_support_plan": present_support_plan,
+    "check_known_words": check_known_words,
+    "personalize_wording": personalize_wording,
+    "present_personalized": present_personalized,
+    "find_peer_group": find_peer_group,
+    "present_peer_group": present_peer_group,
 }
 
 TOOL_LABELS = {
@@ -428,6 +676,11 @@ TOOL_LABELS = {
     "present_lesson_material": "📄 학습 자료 보여주기",
     "present_bilingual": "↔️ 이중언어 나란히 보여주기",
     "present_support_plan": "📋 지원 계획 보여주기",
+    "check_known_words": "🧩 학생이 아는 낱말인지 확인",
+    "personalize_wording": "🪄 학생이 아는 말로 바꾸기",
+    "present_personalized": "📄 학생 맞춤 글 보여주기",
+    "find_peer_group": "🤝 지역 너머 또래 찾기",
+    "present_peer_group": "📋 또래 모둠 보여주기",
 }
 
 

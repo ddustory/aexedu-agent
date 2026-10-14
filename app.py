@@ -8,7 +8,7 @@ import streamlit as st
 
 from agent import data, llm, service
 from agent.config import LANGUAGE_NAMES, SCAFFOLD_LEVELS
-from agent.tools import TOOL_LABELS, AgentState
+from agent.tools import MARK_CLOSE, MARK_OPEN, NOTE_CLOSE, NOTE_OPEN, TOOL_LABELS, AgentState, personalize_wording
 
 st.set_page_config(page_title="다문화 학습 지원 에이전트", page_icon="🌏", layout="wide")
 
@@ -33,6 +33,15 @@ st.markdown("""
 .pair td {vertical-align:top; padding:6px 10px; border-bottom:1px solid #f0f0f0; font-size:1.02rem;}
 .pair th {text-align:left; padding:6px 10px; background:#f8fafc;}
 .lv {display:inline-block; background:#4f46e5; color:white; border-radius:6px; padding:2px 10px; font-weight:700;}
+mark.chg {background:#fde68a; color:inherit; border-radius:4px; padding:0 2px;}
+.note {color:#047857; font-size:0.88em;}
+.ptext {font-size:1.08rem; line-height:1.9; white-space:pre-wrap;}
+.chip {display:inline-block; border:1px solid #e5e7eb; border-radius:999px; padding:1px 10px; margin:2px; font-size:0.85rem; background:white;}
+.bubble {background:#eef2ff; border-radius:14px 14px 14px 4px; padding:8px 14px; display:inline-block;}
+.peer {border:1px solid #e5e7eb; border-radius:12px; padding:10px; background:white; height:100%;}
+.peer.me {border-color:#6366f1; background:#eef2ff;}
+.peer .nm {font-weight:700; font-size:1.05rem;} .peer .sub {font-size:0.82rem; color:#4b5563;}
+.peer .why {font-size:0.78rem; color:#6b7280; margin-top:4px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,7 +73,8 @@ with st.sidebar:
     labels = {s["id"]: f"{s['display_name']} · {s['home_language_name']}" for s in students}
     sid = st.radio("지원할 학생", list(labels), format_func=labels.get, label_visibility="collapsed")
     stu = data.student(sid)
-    st.caption(f"{stu['grade']} · 한국 생활 {stu['months_in_korea']}개월\n\n📝 {stu['teacher_memo']}")
+    st.caption(f"{stu['grade']} · {stu['region']} · 한국 생활 {stu['months_in_korea']}개월 · "
+               f"아는 낱말 수준 {stu['vocab_band']}/3\n\n📝 {stu['teacher_memo']}")
 
     st.divider()
     st.subheader("🪜 학생별 지원 단계")
@@ -181,6 +191,10 @@ def render_output(out: dict):
             st.markdown(f"> 학생 질문: {out['original_text']}")
         render_pair(out["korean_text"], out["native_text"], lang)
         render_cards(out["vocab_cards"])
+    elif out["kind"] == "personal":
+        render_personal(out, s)
+    elif out["kind"] == "peers":
+        render_peers(out, s)
     elif out["kind"] == "plan":
         hist = out["history"]
         before = hist[-2][0] if len(hist) >= 2 else None
@@ -196,6 +210,56 @@ def render_output(out: dict):
         with st.expander("단계 변경 기록 (판단 근거)"):
             for lv, why in hist:
                 st.markdown(f"- **{lv}단계** ← {why}")
+
+
+def marked_html(t: str) -> str:
+    h = html.escape(t or "")
+    for a, b in ((MARK_OPEN, "<mark class='chg'>"), (MARK_CLOSE, "</mark>"),
+                 (NOTE_OPEN, "<span class='note'>"), (NOTE_CLOSE, "</span>")):
+        h = h.replace(a, b)
+    return h
+
+
+def render_personal(out: dict, s: dict):
+    step = out["ease_step"]
+    st.markdown(f"**🪄 {s['display_name']} 맞춤 글** · "
+                + ("처음 맞춤" if step == 0 else f"'좀 더 쉽게' {step}번째") +
+                f" · 낱말 수준 {out['effective_band']} 기준", unsafe_allow_html=True)
+    st.markdown(f"<div class='bubble'>🤖 {esc(out['message'])}</div>", unsafe_allow_html=True)
+    st.write("")
+    st.markdown(f"<div class='ptext'>{marked_html(out['marked_text'])}</div>", unsafe_allow_html=True)
+    st.caption("노란색 = 이 학생이 아는 말로 바꾼 곳 · 초록색 = 핵심 용어 풀이 (용어 자체는 그대로 가르쳐요)")
+    if out["changes"]:
+        st.markdown(" ".join(f"<span class='chip'>{esc(c['from'])} → <b>{esc(c['to'])}</b></span>"
+                             for c in out["changes"]), unsafe_allow_html=True)
+    with st.expander("원래 글 보기"):
+        st.write(out["original_text"])
+
+
+def render_peers(out: dict, s: dict):
+    mode = "같은 모국어 친구" if out["mode"] == "same_language" else "모국어가 다른 친구 (한국어로 대화)"
+    st.markdown(f"**🤝 {s['display_name']}의 또래 모둠** · {mode}")
+    c1, c2 = st.columns(2)
+    c1.metric(f"같은 지역({out['student_region']}) 안 후보", f"{out['local_candidates']}명")
+    c2.metric("지역을 넘은 후보", f"{out['nationwide_candidates']}명",
+              delta=f"+{out['nationwide_candidates'] - out['local_candidates']}명")
+    people = [{"name": s["display_name"].split(" ")[0] + " (우리 학생)", "region": s["region"], "center": "우리 반",
+               "language": s["home_language_name"], "level": out["level"], "grade": s["grade"], "why": "", "me": True}]
+    people += out["members"]
+    cols = st.columns(2)
+    for i, p in enumerate(people):
+        cols[i % 2].markdown(
+            f"<div class='peer{' me' if p.get('me') else ''}'><div class='nm'>{esc(p['name'])}</div>"
+            f"<div class='sub'>📍 {esc(p['region'])} · {esc(p['center'])}</div>"
+            f"<div class='sub'>🌐 {esc(p['language'])} · {p['level']}단계 · {esc(p['grade'])}</div>"
+            + (f"<div class='why'>{esc(p['why'])}</div>" if p.get("why") else "") + "</div>",
+            unsafe_allow_html=True)
+        if i % 2 == 1:
+            cols = st.columns(2)
+    st.write("")
+    st.success(out["message"])
+    st.markdown(f"**함께 할 활동**: {out['activity']}  \n**대화 언어**: {out['talk_language']}")
+    st.caption("미리보기입니다. 친구와 센터는 모두 가상이며, 실제 온라인 모둠 방 연결은 본선 확장 계획입니다.")
 
 
 def run_and_show(key: str, scenario: str, **kwargs):
@@ -240,9 +304,11 @@ def run_and_show(key: str, scenario: str, **kwargs):
 
 
 # ── 탭 ───────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["① 수업 자료 만들기 (쉬운 한국어 + 어휘 카드)",
-                            "② 실시간 이중언어 도우미",
-                            "③ 확인 문제 → 지원 단계 조정"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["① 수업 자료 만들기",
+                                        "② 이중언어 도우미",
+                                        "③ 지원 단계 조정",
+                                        "④ 학생 맞춤 낱말 (파파고와 다른 점)",
+                                        "⑤ 지역 너머 또래 연결"])
 
 with tab1:
     st.markdown("교과 지문을 학생 수준에 맞춰 **쉬운 한국어 + 모국어 + 그림 어휘 카드**로 바꿉니다. "
@@ -303,3 +369,61 @@ with tab3:
     if not key.startswith(f"fading:{sid}:"):
         key = "fading:none"
     run_and_show(key, "fading", student_id=sid, passage_id=P["id"], results=results, _go=go)
+
+with tab4:
+    st.markdown("번역기는 누가 넣어도 **같은 결과 하나**를 내놓아요. 이 에이전트는 **학생마다 아는 낱말이 다르다**는 데서 "
+                "출발해, 같은 글을 **그 학생이 아는 말로** 바꿔요. 학생이 **\"좀 더 쉽게\"**라고 하면 한 단계씩 더 쉽게 맞춥니다.")
+    ptext = st.text_area("학생에게 보여줄 글", value=P["text"], height=130, key="ptext")
+    if not ONLINE:
+        st.caption("오프라인 시연 모드: 낱말 바꾸기는 어떤 글이든 되고, 문장 전체를 다시 쓰는 단계는 예시 지문에서만 됩니다.")
+    ease_map = st.session_state.setdefault("ease", {})
+    ekey = f"{sid}:{hash(ptext)}"
+    ease = ease_map.get(ekey, 0)
+    maxed = ease > stu["vocab_band"]
+    c1, c2 = st.columns(2)
+    go_fit = c1.button(f"▶ {stu['display_name'].split(' ')[0]}에게 맞추기", type="primary", key="go4",
+                       use_container_width=True)
+    go_easy = c2.button("🔁 좀 더 쉽게 설명해 주세요", key="go4e", use_container_width=True,
+                        disabled=ekey not in ease_map or maxed,
+                        help="먼저 '맞추기'를 누른 뒤 쓸 수 있어요.")
+    if maxed:
+        c2.caption("가장 쉬운 단계까지 왔어요. 이제는 선생님이 직접 그림이나 몸짓으로 설명해 주세요.")
+    if go_fit:
+        ease = 0
+    elif go_easy and not maxed:
+        ease += 1
+    if go_fit or go_easy:
+        ease_map[ekey] = ease
+    key = f"personal:{ekey}:{ease}"
+    if go_fit or go_easy:
+        st.session_state.runs.pop(key, None)
+    elif ekey not in ease_map:
+        key = "personal:none"
+    run_and_show(key, "personal", student_id=sid, text=ptext, ease_step=ease, _go=go_fit or go_easy)
+
+    st.divider()
+    st.markdown("#### 같은 글, 학생마다 다른 결과")
+    st.caption("위 글을 네 학생에게 각각 맞춘 결과입니다 (도구를 바로 실행한 비교). 번역기라면 네 칸이 모두 똑같았을 거예요.")
+    cols = st.columns(2)
+    for i, o in enumerate(students):
+        tmp = AgentState()
+        r = personalize_wording(tmp, o["id"], ptext, 0)
+        with cols[i % 2]:
+            st.markdown(f"**{o['display_name'].split(' ')[0]}** · {o['home_language_name']} · 낱말 수준 {o['vocab_band']} "
+                        f"→ <b>{len(r['changes'])}곳</b> 바뀜", unsafe_allow_html=True)
+            st.markdown(f"<div class='ptext' style='font-size:0.95rem'>{marked_html(tmp.last_personal[o['id']]['marked_text'])}</div>",
+                        unsafe_allow_html=True)
+            st.write("")
+
+with tab5:
+    st.markdown("지역아동센터는 그 지역 안에서만 모이고, 지역마다 출신 나라 비율도 달라서 **수준이 맞는 친구를 찾기 어렵습니다.** "
+                "에이전트가 **지역과 상관없이** 한국어 수준이 비슷한 또래를 찾아 온라인 모둠을 제안합니다.")
+    mode_label = st.radio("어떻게 묶을까요?", ["🗣️ 모국어가 다른 친구 (한국어로 대화)", "🏠 같은 모국어 친구"],
+                          horizontal=True, key="peermode")
+    pmode = "mixed_language" if mode_label.startswith("🗣️") else "same_language"
+    st.caption("교사가 학생 상황에 맞게 고르세요. 다른 모국어 모둠은 한국어 사용 기회를, 같은 모국어 모둠은 개념 이해를 돕습니다.")
+    go = st.button(f"▶ {stu['display_name'].split(' ')[0]}의 또래 모둠 만들기", type="primary", key="go5")
+    key = f"peer:{sid}:{pmode}"
+    if go:
+        st.session_state.runs.pop(key, None)
+    run_and_show(key, "peer", student_id=sid, mode=pmode, _go=go)

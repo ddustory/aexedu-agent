@@ -38,3 +38,11 @@ def glossary() -> list[dict]:
 
 def offline_demo() -> dict:
     return _load("offline_demo.json")
+
+
+def word_levels() -> list[dict]:
+    return _load("word_levels.json")["words"]
+
+
+def peers() -> list[dict]:
+    return _load("peers.json")["peers"]

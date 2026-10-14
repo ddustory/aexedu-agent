@@ -44,3 +44,42 @@ def test_fading_up_and_down():
     assert st.levels["S01"] == 2  # 1단계로 시작 → 다 맞혀서 지원 줄이기
     _run(st, "fading", student_id="S01", passage_id="P01", results=[False, False, False, True])
     assert st.levels["S01"] == 1  # 많이 틀려서 지원 늘리기
+
+
+def test_same_text_different_students():
+    """같은 글이라도 학생마다 아는 낱말이 달라 결과가 달라야 한다 (번역기와 다른 점)."""
+    st = AgentState()
+    texts = {}
+    for s in data.students():
+        _run(st, "personal", student_id=s["id"], text=P["text"], ease_step=0)
+        texts[s["id"]] = st.last_personal[s["id"]]["text"]
+    assert len(set(texts.values())) == 4
+    assert texts["S03"] == P["text"]                 # 3단계 낱말 수준 학생은 그대로
+    assert "태양열" in texts["S02"]                    # 웨이는 '태양열'을 안다고 관찰됨
+    assert "끊임없이" in texts["S04"]                  # 바트는 '끊임없이'를 안다고 관찰됨
+    assert "증발" in texts["S01"] and "강수" in texts["S01"]  # 핵심 용어는 바꾸지 않는다
+
+
+def test_easier_steps_get_simpler():
+    st = AgentState()
+    changes = []
+    for step in range(3):  # 사샤(낱말 수준 3): 요청할수록 더 많이 바뀐다
+        _run(st, "personal", student_id="S03", text=P["text"], ease_step=step)
+        changes.append(len(st.last_personal["S03"]["changes"]))
+    assert changes[0] < changes[1] < changes[2]
+    _run(st, "personal", student_id="S01", text=P["text"], ease_step=2)  # 린: 낱말만으로 부족 → 문장 다시 쓰기
+    assert "\n" in st.last_personal["S01"]["text"]
+
+
+def test_peer_group_crosses_regions():
+    st = AgentState()
+    for mode in ("same_language", "mixed_language"):
+        _run(st, "peer", student_id="S01", mode=mode)
+        g = st.last_peer["S01"]
+        assert len(g["members"]) == 3
+        assert g["nationwide_candidates"] > g["local_candidates"]
+        langs = [m["language"] for m in g["members"]]
+        if mode == "same_language":
+            assert set(langs) == {"베트남어"}
+        else:
+            assert "베트남어" not in langs and len(set(langs)) == 3

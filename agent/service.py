@@ -8,6 +8,8 @@ SCENARIOS = {
     "question": (runner.goal_question, offline_scripts.question_script),
     "teacher": (runner.goal_teacher_sentence, offline_scripts.teacher_sentence_script),
     "fading": (runner.goal_fading, offline_scripts.fading_script),
+    "personal": (runner.goal_personal, offline_scripts.personal_script),
+    "peer": (runner.goal_peer, offline_scripts.peer_script),
 }
 
 
@@ -24,6 +26,12 @@ def run(scenario: str, state: AgentState, **kwargs):
         text = kwargs["text"]
         goal = goal_fn(kwargs["student_id"], text)
         script_args = (kwargs["student_id"], text)
+    elif scenario == "personal":
+        goal = goal_fn(kwargs["student_id"], kwargs["text"], kwargs["ease_step"])
+        script_args = (kwargs["student_id"], kwargs["text"], kwargs["ease_step"])
+    elif scenario == "peer":
+        goal = goal_fn(kwargs["student_id"], kwargs["mode"])
+        script_args = (kwargs["student_id"], kwargs["mode"])
     else:
         goal = goal_fn(kwargs["student_id"], kwargs["passage_id"], kwargs["results"])
         script_args = (kwargs["student_id"], kwargs["passage_id"], kwargs["results"])

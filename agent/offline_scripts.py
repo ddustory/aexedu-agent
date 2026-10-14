@@ -70,6 +70,16 @@ def lesson_script(student_id: str, passage_text: str):
                           text=passage_text, level=3))[0]
         korean = rw["rewritten_text"]
 
+    display = korean
+    if level < 3:
+        known = (yield _call("check_known_words", f"{profile['name']} 학생이 실제로 아는 낱말인지 하나씩 확인합니다.",
+                             student_id=student_id, text=korean, ease_step=0))[0]
+        if known["words_to_change"]:
+            display = (yield _say(f"이 학생이 아직 모르는 표현이 {len(known['words_to_change'])}곳 있어요. "
+                                  "학생이 아는 말로 바꾸겠습니다.",
+                                  _call("personalize_wording", "같은 쉬운 한국어라도 이 학생이 아는 낱말로 맞춥니다.",
+                                        student_id=student_id, text=korean, ease_step=0)))[0]["personalized_text"]
+
     found = (yield _call("find_difficult_words", "어휘 카드로 미리 가르칠 핵심 낱말을 원문에서 찾습니다.",
                          text=passage_text))[0]["difficult_words"]
     words = found[:policy["vocab_card_count"]]
@@ -83,7 +93,7 @@ def lesson_script(student_id: str, passage_text: str):
                               text=korean, language=lang))[0]["translation"]
 
     yield _call("present_lesson_material", "완성된 학습 자료를 교사와 학생이 볼 수 있게 화면에 보여줍니다.",
-                student_id=student_id, level=level, korean_text=korean, native_text=native,
+                student_id=student_id, level=level, korean_text=display, native_text=native,
                 vocab_cards=cards, teacher_note=TEACHER_NOTES[level])
 
     yield Step(texts=[
@@ -157,3 +167,45 @@ def fading_script(student_id: str, passage_id: str, results: list[bool]):
                 student_id=student_id, new_level=new, message_to_teacher=msg, next_steps=steps)
     yield Step(texts=[f"확인 문제 {graded['correct']}/{graded['total']}개 정답 → {before}단계 → {new}단계. "
                       + msg])
+
+
+def personal_script(student_id: str, text: str, ease_step: int):
+    profile = (yield _call("get_student_profile", "글을 맞춰 줄 학생이 누구인지 먼저 확인합니다.",
+                           student_id=student_id))[0]
+    ask = ("" if ease_step == 0 else
+           f"학생이 '좀 더 쉽게 설명해 주세요'라고 했어요 ({ease_step}번째). 더 쉬운 말로 다시 맞추겠습니다.")
+    step = _call("check_known_words", "이 학생의 '아는 낱말' 기록과 비교해 모를 만한 표현을 찾습니다.",
+                 student_id=student_id, text=text, ease_step=ease_step)
+    known = (yield (_say(ask, step) if ask else step))[0]
+    work = text
+    if known["needs_full_rewrite"]:
+        work = (yield _say("낱말만 바꿔서는 더 쉬워지지 않아요. 문장을 짧게 나눠 다시 쓰겠습니다.",
+                           _call("rewrite_easy_korean", "가장 쉬운 1단계 규칙(짧은 문장, 쉬운 말)으로 다시 씁니다.",
+                                 text=text, level=1)))[0]["rewritten_text"]
+    done = (yield _call("personalize_wording", "찾은 표현을 이 학생이 아는 말로 바꿉니다. 핵심 용어는 그대로 둡니다.",
+                        student_id=student_id, text=work, ease_step=ease_step))[0]
+    n = len(done["changes"])
+    msg = ("이 글은 이미 네가 아는 말로 되어 있어요. 모르는 말이 있으면 또 물어봐요!" if n == 0 and not done["explained_terms"]
+           else "네가 아는 말로 바꿔 봤어요. 그래도 어려우면 '좀 더 쉽게'를 눌러요!")
+    yield _call("present_personalized", "바뀐 곳을 표시해서 원래 글과 함께 보여줍니다.",
+                student_id=student_id, original_text=text, message=msg)
+    yield Step(texts=[f"{profile['name']} 학생의 낱말 수준에 맞춰 {n}곳을 바꿨습니다"
+                      + (f"(핵심 용어 {len(done['explained_terms'])}개에는 풀이를 붙였습니다)" if done["explained_terms"] else "")
+                      + ". 같은 글이라도 다른 학생에게는 다르게 바뀝니다."])
+
+
+def peer_script(student_id: str, mode: str):
+    profile = (yield _call("get_student_profile", "모둠을 만들 학생의 모국어와 지원 단계를 확인합니다.",
+                           student_id=student_id))[0]
+    level = yield from _ensure_level(student_id, profile)
+    kind = "같은 모국어 친구" if mode == "same_language" else "모국어가 다른 친구(한국어로 대화)"
+    found = (yield _say(f"{level}단계 학생이에요. 지역과 상관없이 '{kind}' 중에서 수준이 비슷한 친구를 찾겠습니다.",
+                        _call("find_peer_group", "수준과 학년이 비슷한 또래를 전국 연결망에서 찾습니다.",
+                              student_id=student_id, mode=mode)))[0]
+    local = found["local_candidates"]
+    msg = (f"{profile['name']} 학생과 같은 지역에서는 조건에 맞는 친구가 "
+           + ("한 명도 없었지만" if local == 0 else f"{local}명뿐이었지만")
+           + f", 지역을 넘으니 {found['nationwide_candidates']}명 중에서 고를 수 있었어요.")
+    yield _call("present_peer_group", "만든 모둠과 함께 할 활동을 교사에게 보여줍니다.",
+                student_id=student_id, message=msg)
+    yield Step(texts=[msg + f" 수준이 비슷한 친구 {len(found['members'])}명과 4명 모둠을 만들었습니다."])

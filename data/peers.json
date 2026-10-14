@@ -1,0 +1,23 @@
+{
+  "_note": "또래 연결 미리보기용 가상 학생입니다. 모두 실제 인물이 아니며, 센터 이름도 가상입니다. level 은 현재 비계 단계(1=지원 많음 ~ 3=지원 적음)입니다.",
+  "peers": [
+    {"id": "P101", "display_name": "투이", "region": "경기 안산", "center": "안산 가람 지역아동센터", "home_language": "vi", "home_language_name": "베트남어", "level": 2, "grade": "초등 4학년", "interests": ["그림 그리기", "축구"]},
+    {"id": "P102", "display_name": "안나", "region": "경기 안산", "center": "안산 가람 지역아동센터", "home_language": "ru", "home_language_name": "러시아어", "level": 3, "grade": "초등 5학년", "interests": ["책 읽기"]},
+    {"id": "P103", "display_name": "하오", "region": "경기 안산", "center": "안산 새싹 지역아동센터", "home_language": "zh", "home_language_name": "중국어", "level": 3, "grade": "초등 6학년", "interests": ["게임", "요리"]},
+    {"id": "P104", "display_name": "남", "region": "부산 사하", "center": "사하 바다 지역아동센터", "home_language": "vi", "home_language_name": "베트남어", "level": 1, "grade": "초등 4학년", "interests": ["노래", "그림 그리기"]},
+    {"id": "P105", "display_name": "자르갈", "region": "부산 사하", "center": "사하 바다 지역아동센터", "home_language": "mn", "home_language_name": "몽골어", "level": 1, "grade": "초등 3학년", "interests": ["말 타기 이야기", "축구"]},
+    {"id": "P106", "display_name": "마이", "region": "전남 영암", "center": "영암 들꽃 지역아동센터", "home_language": "vi", "home_language_name": "베트남어", "level": 1, "grade": "초등 4학년", "interests": ["춤", "동물"]},
+    {"id": "P107", "display_name": "아잠", "region": "충북 음성", "center": "음성 햇살 지역아동센터", "home_language": "uz", "home_language_name": "우즈베크어", "level": 1, "grade": "초등 4학년", "interests": ["축구", "만들기"]},
+    {"id": "P108", "display_name": "리안", "region": "경북 구미", "center": "구미 나무 지역아동센터", "home_language": "zh", "home_language_name": "중국어", "level": 1, "grade": "초등 5학년", "interests": ["그림 그리기", "동물"]},
+    {"id": "P109", "display_name": "티나", "region": "대구 달서", "center": "달서 무지개 지역아동센터", "home_language": "tl", "home_language_name": "필리핀어(타갈로그어)", "level": 1, "grade": "초등 4학년", "interests": ["노래", "요리"]},
+    {"id": "P110", "display_name": "보르", "region": "광주 광산", "center": "광산 별빛 지역아동센터", "home_language": "mn", "home_language_name": "몽골어", "level": 2, "grade": "초등 4학년", "interests": ["축구", "게임"]},
+    {"id": "P111", "display_name": "꽝", "region": "경남 김해", "center": "김해 강변 지역아동센터", "home_language": "vi", "home_language_name": "베트남어", "level": 2, "grade": "초등 4학년", "interests": ["과학 실험", "축구"]},
+    {"id": "P112", "display_name": "샤오위", "region": "충남 아산", "center": "아산 푸른 지역아동센터", "home_language": "zh", "home_language_name": "중국어", "level": 2, "grade": "초등 4학년", "interests": ["책 읽기", "그림 그리기"]},
+    {"id": "P113", "display_name": "디마", "region": "경기 화성", "center": "화성 바람 지역아동센터", "home_language": "ru", "home_language_name": "러시아어", "level": 2, "grade": "초등 5학년", "interests": ["게임", "과학 실험"]},
+    {"id": "P114", "display_name": "솜", "region": "전북 익산", "center": "익산 한울 지역아동센터", "home_language": "km", "home_language_name": "크메르어", "level": 2, "grade": "초등 4학년", "interests": ["춤", "동물"]},
+    {"id": "P115", "display_name": "올가", "region": "서울 구로", "center": "구로 이음 지역아동센터", "home_language": "ru", "home_language_name": "러시아어", "level": 3, "grade": "초등 5학년", "interests": ["책 읽기", "피아노"]},
+    {"id": "P116", "display_name": "뚜안", "region": "인천 남동", "center": "남동 다리 지역아동센터", "home_language": "vi", "home_language_name": "베트남어", "level": 3, "grade": "초등 5학년", "interests": ["축구", "만들기"]},
+    {"id": "P117", "display_name": "아루나", "region": "경기 시흥", "center": "시흥 마루 지역아동센터", "home_language": "mn", "home_language_name": "몽골어", "level": 3, "grade": "초등 6학년", "interests": ["과학 실험", "그림 그리기"]},
+    {"id": "P118", "display_name": "진", "region": "서울 영등포", "center": "영등포 함께 지역아동센터", "home_language": "zh", "home_language_name": "중국어", "level": 1, "grade": "초등 4학년", "interests": ["게임", "노래"]}
+  ]
+}
