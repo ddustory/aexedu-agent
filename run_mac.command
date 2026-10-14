@@ -47,4 +47,4 @@ fi
 
 # 6) 시연 화면 열기
 echo "▶ 시연 화면을 엽니다. 이 창은 시연이 끝날 때까지 열어 두세요."
-.venv312/bin/python -m streamlit run app.py --browser.gatherUsageStats false
+.venv312/bin/python -m streamlit run "${APP_FILE:-app.py}" --browser.gatherUsageStats false

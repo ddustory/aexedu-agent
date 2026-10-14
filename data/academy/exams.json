@@ -1,0 +1,1843 @@
+{
+ "_note": "시연용 가상 데이터입니다. 실제 학생·시험이 아닙니다. 성취기준은 예시이며 교사가 실제 코드로 바꿔 쓸 수 있습니다.",
+ "standards": [
+  {
+   "id": "듣말-토론근거",
+   "area": "듣기·말하기",
+   "desc": "토론에서 주장과 근거가 알맞은지 판단하기"
+  },
+  {
+   "id": "듣말-발표구성",
+   "area": "듣기·말하기",
+   "desc": "듣는 이를 고려해 발표 내용을 구성하기"
+  },
+  {
+   "id": "읽기-요약",
+   "area": "읽기",
+   "desc": "글의 중심 내용을 찾아 요약하기"
+  },
+  {
+   "id": "읽기-설명방법",
+   "area": "읽기",
+   "desc": "설명 방법(정의·예시·비교 등)을 파악하기"
+  },
+  {
+   "id": "읽기-논증평가",
+   "area": "읽기",
+   "desc": "주장과 근거의 타당성을 평가하며 읽기"
+  },
+  {
+   "id": "쓰기-고쳐쓰기",
+   "area": "쓰기",
+   "desc": "통일성을 고려해 글을 고쳐 쓰기"
+  },
+  {
+   "id": "문법-품사",
+   "area": "문법",
+   "desc": "낱말을 품사에 따라 분류하기"
+  },
+  {
+   "id": "문법-문장성분",
+   "area": "문법",
+   "desc": "문장 성분을 파악하기"
+  },
+  {
+   "id": "문법-음운변동",
+   "area": "문법",
+   "desc": "음운의 변동을 이해하기"
+  },
+  {
+   "id": "문학-비유상징",
+   "area": "문학",
+   "desc": "비유와 상징 표현의 효과 이해하기"
+  },
+  {
+   "id": "문학-갈등구성",
+   "area": "문학",
+   "desc": "소설의 갈등과 구성 단계 파악하기"
+  },
+  {
+   "id": "문학-관점",
+   "area": "문학",
+   "desc": "말하는 이·서술자의 관점 파악하기"
+  }
+ ],
+ "exams": [
+  {
+   "id": "G1-2026-07",
+   "grade": 1,
+   "month": "2026-07",
+   "title": "중1 7월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 3
+    }
+   ]
+  },
+  {
+   "id": "G1-2026-08",
+   "grade": 1,
+   "month": "2026-08",
+   "title": "중1 8월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  },
+  {
+   "id": "G1-2026-09",
+   "grade": 1,
+   "month": "2026-09",
+   "title": "중1 9월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 4
+    }
+   ]
+  },
+  {
+   "id": "G1-2026-10",
+   "grade": 1,
+   "month": "2026-10",
+   "title": "중1 10월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 1
+    }
+   ]
+  },
+  {
+   "id": "G2-2026-07",
+   "grade": 2,
+   "month": "2026-07",
+   "title": "중2 7월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  },
+  {
+   "id": "G2-2026-08",
+   "grade": 2,
+   "month": "2026-08",
+   "title": "중2 8월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 5
+    }
+   ]
+  },
+  {
+   "id": "G2-2026-09",
+   "grade": 2,
+   "month": "2026-09",
+   "title": "중2 9월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  },
+  {
+   "id": "G2-2026-10",
+   "grade": 2,
+   "month": "2026-10",
+   "title": "중2 10월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 3
+    }
+   ]
+  },
+  {
+   "id": "G3-2026-07",
+   "grade": 3,
+   "month": "2026-07",
+   "title": "중3 7월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 1
+    }
+   ]
+  },
+  {
+   "id": "G3-2026-08",
+   "grade": 3,
+   "month": "2026-08",
+   "title": "중3 8월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  },
+  {
+   "id": "G3-2026-09",
+   "grade": 3,
+   "month": "2026-09",
+   "title": "중3 9월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  },
+  {
+   "id": "G3-2026-10",
+   "grade": 3,
+   "month": "2026-10",
+   "title": "중3 10월 국어 학력평가",
+   "items": [
+    {
+     "no": 1,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 2,
+     "standard": "문학-비유상징",
+     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 3,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 4,
+     "standard": "문학-갈등구성",
+     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 5,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 6,
+     "standard": "문학-관점",
+     "title": "서술자의 시점과 효과 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 7,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 8,
+     "standard": "읽기-요약",
+     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 9,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 10,
+     "standard": "읽기-설명방법",
+     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 11,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 12,
+     "standard": "읽기-논증평가",
+     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "points": 5,
+     "answer": 5
+    },
+    {
+     "no": 13,
+     "standard": "문법-품사",
+     "title": "품사가 다른 하나 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 14,
+     "standard": "문법-문장성분",
+     "title": "밑줄 친 말의 문장 성분 고르기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 15,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 4
+    },
+    {
+     "no": 16,
+     "standard": "문법-음운변동",
+     "title": "음운 변동이 일어나는 단어 고르기",
+     "points": 5,
+     "answer": 1
+    },
+    {
+     "no": 17,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 18,
+     "standard": "쓰기-고쳐쓰기",
+     "title": "통일성을 해치는 문장 찾기",
+     "points": 5,
+     "answer": 3
+    },
+    {
+     "no": 19,
+     "standard": "듣말-토론근거",
+     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "points": 5,
+     "answer": 2
+    },
+    {
+     "no": 20,
+     "standard": "듣말-발표구성",
+     "title": "발표 계획에서 빠진 내용 고르기",
+     "points": 5,
+     "answer": 2
+    }
+   ]
+  }
+ ]
+}

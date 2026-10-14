@@ -66,8 +66,10 @@ class ClaudeBrain:
 
     label = "Claude (실시간 AI)"
 
-    def __init__(self, goal: str):
+    def __init__(self, goal: str, system: str = None, tools: list[dict] = None):
         self.messages = [{"role": "user", "content": goal}]
+        self.system = system or SYSTEM_PROMPT
+        self.tools = tools or TOOL_SCHEMAS
 
     def next(self, results: list[dict] | None) -> Step:
         if results:
@@ -78,8 +80,8 @@ class ClaudeBrain:
             ]})
         resp = llm.create_message(
             max_tokens=16000,
-            system=SYSTEM_PROMPT,
-            tools=TOOL_SCHEMAS,
+            system=self.system,
+            tools=self.tools,
             output_config={"effort": "medium"},
             messages=self.messages,
         )
@@ -100,18 +102,19 @@ class ClaudeBrain:
         return step
 
 
-def _ollama_tools() -> list[dict]:
+def _ollama_tools(schemas: list[dict]) -> list[dict]:
     return [{"type": "function", "function": {"name": t["name"], "description": t["description"],
-                                              "parameters": t["input_schema"]}} for t in TOOL_SCHEMAS]
+                                              "parameters": t["input_schema"]}} for t in schemas]
 
 
 class LocalBrain:
     """노트북 안의 오픈 모델(Ollama)이 다음 행동을 결정한다. 인터넷·API 키가 필요 없다."""
 
-    def __init__(self, goal: str):
+    def __init__(self, goal: str, system: str = None, tools: list[dict] = None):
         self.label = f"로컬 AI ({llm.LOCAL_MODEL} · 이 컴퓨터 안에서 실행)"
         self.messages = [{"role": "user", "content": goal}]
-        self.tools = _ollama_tools()
+        self.system = system or SYSTEM_PROMPT
+        self.tools = _ollama_tools(tools or TOOL_SCHEMAS)
         self.counter = 0
         self.pending: list[ToolCall] = []
 
@@ -120,7 +123,7 @@ class LocalBrain:
             names = {c.id: c.name for c in self.pending}
             for r in results:
                 self.messages.append({"role": "tool", "tool_name": names.get(r["id"], ""), "content": r["content"]})
-        msg = llm.local_chat(self.messages, tools=self.tools, system=SYSTEM_PROMPT + LOCAL_HINT)
+        msg = llm.local_chat(self.messages, tools=self.tools, system=self.system + LOCAL_HINT)
         self.messages.append({k: v for k, v in msg.items() if k in ("role", "content", "tool_calls")})
         step = Step()
         if (msg.get("content") or "").strip():
@@ -174,7 +177,7 @@ class ScriptedBrain:
         return step
 
 
-def run_agent(brain, state: AgentState) -> Iterator[dict]:
+def run_agent(brain, state, executor=None, errors=(ToolError,)) -> Iterator[dict]:
     """에이전트 루프를 돌리며 화면에 보여줄 이벤트를 하나씩 내보낸다."""
     results = None
     for turn in range(1, MAX_AGENT_TURNS + 1):
@@ -204,12 +207,12 @@ def run_agent(brain, state: AgentState) -> Iterator[dict]:
             yield {"type": "tool_call", "turn": turn, "name": call.name, "reason": reason,
                    "input": {k: v for k, v in args.items() if k != "reason"}}
             try:
-                out = execute(state, call.name, args)
+                out = (executor or execute)(state, call.name, args)
                 summary = out.get("_summary", "")
                 payload = {k: v for k, v in out.items() if k != "_summary"}
                 results.append({"id": call.id, "content": json.dumps(payload, ensure_ascii=False), "is_error": False})
                 yield {"type": "tool_result", "name": call.name, "ok": True, "summary": summary, "output": payload}
-            except (ToolError, llm.OfflineUnsupported, TypeError) as e:
+            except (*errors, ToolError, llm.OfflineUnsupported, TypeError) as e:
                 results.append({"id": call.id, "content": f"오류: {e}", "is_error": True})
                 yield {"type": "tool_result", "name": call.name, "ok": False, "summary": f"오류: {e}", "output": {}}
             except Exception as e:

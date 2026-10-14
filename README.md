@@ -8,6 +8,8 @@
 
 ![시연 화면 - 수업 자료 만들기](docs/screenshot_lesson.png)
 
+> 같은 저장소에 **[📚 학원 수업 도우미 에이전트](ACADEMY.md)**(알림장 작성 · 월말 학력평가 분석)도 함께 들어 있습니다.
+
 ---
 
 ## 1. 이 에이전트가 하는 일
@@ -223,6 +225,8 @@ agent/
   offline_scripts.py    API 키 없을 때 쓰는 시연 시나리오
   llm.py                AI 두뇌 연결 (Claude API / 로컬 Ollama / 오프라인)
 data/                   가상 학생, 예시 지문, 진단·확인 문제, 어휘 사전, 기초 어휘 목록, 낱말 난이도표, 또래 연결용 가상 학생, 오프라인 시연 응답
+academy/                학원 수업 도우미 에이전트 (알림장 · 학력평가 분석) — ACADEMY.md 참고
+academy_app.py          학원 수업 도우미 시연 화면
 tests/                  자동 점검 (python -m pytest tests)
 ```
 
