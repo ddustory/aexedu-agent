@@ -6,7 +6,7 @@ API 키가 없을 때 ScriptedBrain 이 이 시나리오대로 도구를 고른�
 """
 
 from . import data
-from .config import LANGUAGE_NAMES, SCAFFOLD_LEVELS
+from .config import LANGUAGE_NAMES, MAX_ADAPT_ROUNDS, MAX_NEW_WORDS, SCAFFOLD_LEVELS
 from .runner import Step, ToolCall
 
 
@@ -41,6 +41,33 @@ def _ensure_level(student_id: str, profile: dict):
     return decided["new_level"]
 
 
+def _fit_to_pocket(student_id: str, name: str, text: str):
+    """재고 → 고치고 → 다시 재기. (생성기 안에서 yield from 으로 사용) 반환: (글, 검사 결과, 미룬 용어)"""
+    cov = (yield _call("check_coverage", f"이 글에서 {data.subj(name)} 아는 낱말이 몇 %인지, 새 낱말이 몇 개인지 잽니다.",
+                       student_id=student_id, text=text))[0]
+    deferred = []
+    for _ in range(MAX_ADAPT_ROUNDS):
+        if cov["passed"]:
+            break
+        why = []
+        if cov["words_to_replace"]:
+            why.append(f"모르는 낱말 {len(cov['words_to_replace'])}개를 아는 말로 바꾸고")
+        if cov["terms_to_defer"]:
+            why.append(f"핵심 용어가 {len(cov['core_new_words'])}개라 기준({MAX_NEW_WORDS}개)에 맞게 "
+                       f"{', '.join(cov['terms_to_keep'])}만 오늘 가르치고 {', '.join(cov['terms_to_defer'])}는 쉬운 말로 풀어")
+        ad = (yield _say("기준에 못 미쳐요. " + ", ".join(why) + " 다시 쓰겠습니다.",
+                         _call("adapt_to_pocket", f"{name}의 낱말 주머니에 맞춰 글을 고칩니다.",
+                               student_id=student_id, text=text, words_to_replace=cov["words_to_replace"],
+                               terms_to_keep=cov["terms_to_keep"], terms_to_defer=cov["terms_to_defer"])))[0]
+        deferred += ad["deferred_terms"]
+        if ad["adapted_text"] == text:
+            break
+        text = ad["adapted_text"]
+        cov = (yield _call("check_coverage", "고친 글을 다시 재서 기준을 넘었는지 스스로 확인합니다.",
+                           student_id=student_id, text=text))[0]
+    return text, cov, deferred
+
+
 def lesson_script(student_id: str, passage_text: str):
     profile = (yield _call("get_student_profile", "학생의 모국어와 현재 지원 단계를 먼저 확인합니다.",
                            student_id=student_id))[0]
@@ -70,18 +97,14 @@ def lesson_script(student_id: str, passage_text: str):
                           text=passage_text, level=3))[0]
         korean = rw["rewritten_text"]
 
-    display = korean
-    if level < 3:
-        known = (yield _call("check_known_words", f"{profile['name']} 학생이 실제로 아는 낱말인지 하나씩 확인합니다.",
-                             student_id=student_id, text=korean, ease_step=0))[0]
-        if known["words_to_change"]:
-            display = (yield _say(f"이 학생이 아직 모르는 표현이 {len(known['words_to_change'])}곳 있어요. "
-                                  "학생이 아는 말로 바꾸겠습니다.",
-                                  _call("personalize_wording", "같은 쉬운 한국어라도 이 학생이 아는 낱말로 맞춥니다.",
-                                        student_id=student_id, text=korean, ease_step=0)))[0]["personalized_text"]
+    name = profile["name"].split(" ")[0]
+    yield _call("get_word_pocket", f"{data.subj(name)} 어떤 낱말을 알고, 무엇을 배우는 중인지 낱말 주머니를 봅니다.",
+                student_id=student_id)
+    display, cov, deferred = yield from _fit_to_pocket(student_id, name, korean)
 
-    found = (yield _call("find_difficult_words", "어휘 카드로 미리 가르칠 핵심 낱말을 원문에서 찾습니다.",
-                         text=passage_text))[0]["difficult_words"]
+    found = (yield _call("find_difficult_words", "학생에게 줄 글에서 어휘 카드로 가르칠 낱말을 찾습니다.",
+                         text=display))[0]["difficult_words"]
+    found = [w for w in found if w not in deferred]
     words = found[:policy["vocab_card_count"]]
     cards = (yield _call("make_vocab_cards",
                          f"정책에 따라 중요한 낱말 {len(words)}개를 {LANGUAGE_NAMES[lang]} 어휘 카드로 만듭니다.",
@@ -90,15 +113,20 @@ def lesson_script(student_id: str, passage_text: str):
     native = ""
     if policy["show_full_translation"]:
         native = (yield _call("translate_text", f"1단계 학생이므로 쉬운 한국어 전체를 {LANGUAGE_NAMES[lang]}로 나란히 제공합니다.",
-                              text=korean, language=lang))[0]["translation"]
+                              text=display, language=lang))[0]["translation"]
 
+    note = TEACHER_NOTES[level]
+    if deferred:
+        note += (f" ※ 새 낱말 기준({MAX_NEW_WORDS}개)에 맞춰 {data.topic(chr(39) + '·'.join(deferred) + chr(39))} 오늘 용어 없이 쉬운 말로만 풀었어요. "
+                 "다음 수업의 새 낱말로 가르쳐 주세요.")
     yield _call("present_lesson_material", "완성된 학습 자료를 교사와 학생이 볼 수 있게 화면에 보여줍니다.",
                 student_id=student_id, level=level, korean_text=display, native_text=native,
-                vocab_cards=cards, teacher_note=TEACHER_NOTES[level])
+                vocab_cards=cards, teacher_note=note)
 
     yield Step(texts=[
         f"{profile['name']} 학생을 위해 {policy['name']} 학습 자료를 만들었습니다. "
-        f"원문(평균 {orig['avg_eojeol_per_sentence']}어절/문장)을 학생 수준에 맞게 바꾸고, "
+        f"원문(평균 {orig['avg_eojeol_per_sentence']}어절/문장)을 {name}의 낱말 주머니로 재고 맞춰 "
+        f"아는 낱말 {cov['coverage']}%·새 낱말 {len(cov['new_words'])}개가 되게 하고, "
         f"핵심 낱말 {len(cards)}개를 {LANGUAGE_NAMES[lang]} 어휘 카드로 붙였습니다."
         + (" 쉬운 한국어 전체의 모국어 번역도 함께 넣었습니다." if native else "")
     ])
@@ -113,10 +141,13 @@ def question_script(student_id: str, question: str):
         yield Step(texts=["오프라인 시연 모드에서는 준비된 예시 질문에만 답할 수 있어요. "
                           "새 질문은 API 키를 넣으면 실제 AI가 답합니다."])
         return
-    korean = (yield _say(f"학생이 {LANGUAGE_NAMES[lang]}로 \"{preset['question_ko']}\"라고 물었습니다. "
-                         f"오늘 배운 낱말과 연결해 답하겠습니다.",
-                         _call("answer_student_question", "먼저 쉬운 한국어로 답을 씁니다.",
-                               student_id=student_id, question=question)))[0]["korean_answer"]
+    name = profile["name"].split(" ")[0]
+    yield _say(f"학생이 {LANGUAGE_NAMES[lang]}로 \"{preset['question_ko']}\"라고 물었습니다. "
+               f"{data.subj(name)} 아는 낱말로 답하기 위해 낱말 주머니부터 보겠습니다.",
+               _call("get_word_pocket", f"{data.subj(name)} 아는 낱말과 배우는 중인 낱말을 확인합니다.", student_id=student_id))
+    korean = (yield _call("answer_student_question", "쉬운 한국어로 답을 씁니다.",
+                          student_id=student_id, question=question))[0]["korean_answer"]
+    korean, cov, _ = yield from _fit_to_pocket(student_id, name, korean)
     cards = (yield _call("make_vocab_cards", "답에 꼭 필요한 오늘의 핵심 낱말을 어휘 카드로 준비합니다.",
                          words=preset["related_words"], language=lang))[0]["cards"]
     yield _call("present_bilingual", "쉬운 한국어 답과 모국어 답을 나란히 보여줍니다.",
@@ -186,6 +217,8 @@ def personal_script(student_id: str, text: str, ease_step: int):
                                  text=text, level=1)))[0]["rewritten_text"]
     done = (yield _call("personalize_wording", "찾은 표현을 이 학생이 아는 말로 바꿉니다. 핵심 용어는 그대로 둡니다.",
                         student_id=student_id, text=work, ease_step=ease_step))[0]
+    yield _call("check_coverage", "맞춘 글에서 이 학생이 아는 낱말 비율을 잽니다.",
+                student_id=student_id, text=done["personalized_text"])
     n = len(done["changes"])
     msg = ("이 글은 이미 네가 아는 말로 되어 있어요. 모르는 말이 있으면 또 물어봐요!" if n == 0 and not done["explained_terms"]
            else "네가 아는 말로 바꿔 봤어요. 그래도 어려우면 '좀 더 쉽게'를 눌러요!")

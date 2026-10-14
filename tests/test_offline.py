@@ -83,3 +83,30 @@ def test_peer_group_crosses_regions():
             assert set(langs) == {"베트남어"}
         else:
             assert "베트남어" not in langs and len(set(langs)) == 3
+
+
+def test_lesson_fits_word_pocket():
+    """수업 자료는 학생 낱말 주머니 기준(아는 낱말 80% 이상, 새 낱말 3개까지)을 통과해야 한다."""
+    from agent.config import COVERAGE_MIN, MAX_NEW_WORDS
+    st = AgentState()
+    for s in data.students():
+        _run(st, "lesson", student_id=s["id"], passage_text=P["text"], passage_id="P01")
+        cov = st.outputs[-1]["coverage"]
+        assert cov["coverage"] >= COVERAGE_MIN and len(cov["new_words"]) <= MAX_NEW_WORDS, (s["id"], cov)
+
+
+def test_reactions_change_next_text():
+    """학생 반응(3번 맞힘 / 몰라요)이 다음 글을 바꾼다: 1대1 번역이 아닌 '자라는' 맞춤."""
+    from agent.tools import record_word_feedback
+    st = AgentState()
+    _run(st, "lesson", student_id="S02", passage_text=P["text"], passage_id="P01")
+    first = st.outputs[-1]
+    assert "강수" not in first["coverage"]["new_words"]          # 새 낱말 3개 기준으로 '강수'는 미룸
+    for _ in range(3):
+        record_word_feedback(st, "S02", "증발", "correct")
+    record_word_feedback(st, "S02", "지구", "dont_know")
+    _run(st, "lesson", student_id="S02", passage_text=P["text"], passage_id="P01")
+    second = st.outputs[-1]
+    assert "증발" not in second["coverage"]["new_words"]         # 이제 아는 낱말
+    assert "강수" in second["coverage"]["new_words"]             # 빈자리에 다음 핵심 용어
+    assert "지구" in first["korean_text"] and "지구" not in second["korean_text"]  # '몰라요' 낱말은 바뀜

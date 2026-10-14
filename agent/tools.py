@@ -8,8 +8,11 @@
 import re
 from dataclasses import dataclass, field
 
-from . import data, llm
+from . import data, llm, pocket
 from .config import (
+    COVERAGE_MIN,
+    KNOWN_AFTER_CORRECT,
+    MAX_NEW_WORDS,
     CHECK_DOWN_THRESHOLD,
     CHECK_UP_THRESHOLD,
     DIAGNOSIS_RULES,
@@ -29,6 +32,8 @@ class AgentState:
     outputs: list = field(default_factory=list)        # 화면에 보여줄 최종 결과물
     last_personal: dict = field(default_factory=dict)  # 학생ID → 마지막 '아는 낱말 맞춤' 결과
     last_peer: dict = field(default_factory=dict)      # 학생ID → 마지막 또래 연결 결과
+    pocket: dict = field(default_factory=dict)         # 학생ID → 낱말 주머니 기록 (반응으로 바뀐 낱말)
+    last_coverage: dict = field(default_factory=dict)  # 학생ID → 마지막 '아는 낱말 비율' 검사 결과
 
 
 class ToolError(Exception):
@@ -258,6 +263,9 @@ def translate_text(state: AgentState, text: str, language: str, reason: str = ""
         raise ToolError(f"지원하지 않는 언어입니다: {language}")
     if llm.online():
         out = llm.complete_text(TRANSLATE_SYSTEM, f"모국어: {LANGUAGE_NAMES[language]}\n\n{text}")
+        if "\ufffd" in out:  # 글자가 깨져 나오면 한 번 더 번역한다
+            out = llm.complete_text(TRANSLATE_SYSTEM, f"모국어: {LANGUAGE_NAMES[language]}\n\n{text}")
+        out = out.replace("\ufffd", "")
     else:
         out = llm.offline_translate(text, language)
     return {
@@ -298,8 +306,18 @@ def present_lesson_material(state: AgentState, student_id: str, level: int, kore
         "kind": "lesson", "student_id": student_id, "level": level,
         "korean_text": korean_text, "native_text": native_text,
         "vocab_cards": vocab_cards, "teacher_note": teacher_note,
+        "coverage": _coverage_for(state, student_id, korean_text),
     })
     return {"shown": True, "_summary": f"학습 자료를 화면에 표시함 ({level}단계)"}
+
+
+def _coverage_for(state: AgentState, student_id: str, text: str) -> dict:
+    """화면에 보여줄 글의 '아는 낱말' 검사 결과. 이미 잰 글이면 그 결과를, 아니면 지금 잰다."""
+    last = state.last_coverage.get(student_id)
+    if last and " ".join(last["text"].split()) == " ".join((text or "").split()):
+        return last
+    a = pocket.analyze(state, student_id, text)
+    return {k: v for k, v in a.items() if k != "items"} | {"text": text}
 
 
 def hangul_ratio(text: str) -> float:
@@ -334,11 +352,16 @@ ANSWER_SYSTEM = """당신은 한국 초등학교 교사입니다. 한국어를 �
 def answer_student_question(state: AgentState, student_id: str, question: str, reason: str = "") -> dict:
     s = _need_student(student_id)
     if llm.online():
+        known = ", ".join(pocket.known_examples(state, student_id, 120))
         prompt = (f"학생 모국어: {s['home_language_name']}\n학생 질문(모국어): {question}\n"
-                  "먼저 질문의 뜻을 이해한 뒤, 쉬운 한국어로만 답하세요.")
+                  f"이 학생이 아는 낱말(되도록 이 낱말로 쓰세요): {known}\n"
+                  "먼저 질문의 뜻을 이해한 뒤, 쉬운 한국어로만 답하세요. 질문을 다시 쓰지 말고 답만 쓰세요.")
         out = llm.complete_text(ANSWER_SYSTEM, prompt)
         if hangul_ratio(out) < 0.6:  # 작은 모델이 모국어로 답하면 한 번 더 분명하게 요청
             out = llm.complete_text(ANSWER_SYSTEM, prompt + "\n\n주의: 방금 답이 한국어가 아니었습니다. 한국어로만 다시 쓰세요.")
+        lines = [ln.strip() for ln in out.splitlines() if ln.strip()]
+        lines = [ln for ln in lines if not ln.endswith("?") and not ln.startswith(("답:", "질문:"))] or lines
+        out = "\n".join(ln.removeprefix("답:").strip() for ln in lines)
         _need_korean(out, "answer")
     else:
         preset = data.offline_demo()["student_questions"].get(s["home_language"], {})
@@ -358,6 +381,7 @@ def present_bilingual(state: AgentState, student_id: str, kind: str, korean_text
         "kind": "bilingual", "mode": kind, "student_id": student_id,
         "original_text": original_text, "korean_text": korean_text,
         "native_text": native_text, "vocab_cards": vocab_cards or [],
+        "coverage": _coverage_for(state, student_id, korean_text) if kind == "answer" else None,
     })
     return {"shown": True, "_summary": "한국어/모국어 나란히 화면에 표시함"}
 
@@ -502,7 +526,8 @@ def present_personalized(state: AgentState, student_id: str, message: str, origi
     if not p:
         raise ToolError("먼저 personalize_wording 으로 학생 맞춤 글을 만들어야 합니다.")
     state.outputs.append({"kind": "personal", "student_id": student_id, "message": message,
-                          "original_text": original_text or p["input_text"], **p})
+                          "original_text": original_text or p["input_text"], **p,
+                          "coverage": _coverage_for(state, student_id, p["text"])})
     return {"shown": True, "_summary": f"학생 맞춤 글을 화면에 표시함 (쉽게 {p['ease_step']}단계)"}
 
 
@@ -584,6 +609,97 @@ def present_peer_group(state: AgentState, student_id: str, message: str, reason:
     return {"shown": True, "_summary": f"또래 모둠 {len(p['members']) + 1}명을 화면에 표시함"}
 
 
+# ── 12. 학생별 낱말 주머니: 재고 → 고치고 → 다시 재기 ─────────────
+# 기준(교사 확정): 아는 낱말 80% 이상, 새 낱말 3개까지, 3번 맞히면 '아는 낱말'.
+
+def get_word_pocket(state: AgentState, student_id: str, reason: str = "") -> dict:
+    _need_student(student_id)
+    sm = pocket.summary(state, student_id)
+    learning = ", ".join(f"{w}({n}/{KNOWN_AFTER_CORRECT})" for w, n in sm["learning"].items())
+    return {
+        **{k: v for k, v in sm.items()},
+        "rules": f"아는 낱말 {COVERAGE_MIN}% 이상 · 새 낱말 {MAX_NEW_WORDS}개까지 · {KNOWN_AFTER_CORRECT}번 맞히면 아는 낱말",
+        "_summary": (f"아는 낱말 {sm['known_count']}개 · 배우는 중 {len(sm['learning'])}개"
+                     + (f" ({learning})" if learning else "")
+                     + (f" · '몰라요' 표시 {len(sm['marked_unknown'])}개" if sm["marked_unknown"] else "")),
+    }
+
+
+def check_coverage(state: AgentState, student_id: str, text: str, reason: str = "") -> dict:
+    _need_student(student_id)
+    a = pocket.analyze(state, student_id, text)
+    state.last_coverage[student_id] = {k: v for k, v in a.items() if k != "items"} | {"text": text}
+    verdict = "✅ 통과" if a["passed"] else "❌ 기준 미달"
+    return {
+        **{k: v for k, v in a.items() if k != "items"},
+        "_summary": (f"{verdict} · 아는 낱말 {a['coverage']}% (기준 {COVERAGE_MIN}%) · 새 낱말 {len(a['new_words'])}개 "
+                     f"(기준 {MAX_NEW_WORDS}개)" + (f": {', '.join(a['new_words'][:6])}" if a["new_words"] else "")
+                     + (f" · 오늘은 미룰 핵심 용어: {', '.join(a['terms_to_defer'])}" if not a["passed"] and a["terms_to_defer"] else "")),
+    }
+
+
+ADAPT_SYSTEM = """당신은 한국어를 배우는 이주배경 초등학생을 위한 글 고치기 전문가입니다.
+주어진 글을 이 학생이 아는 낱말로 고쳐 씁니다. 반드시 지킬 것:
+- [바꿀 낱말]은 학생이 모르는 말입니다. [학생이 아는 낱말]에 있는 쉬운 말로 바꿉니다.
+- [남길 핵심 용어]는 오늘 배울 낱말이니 그대로 둡니다.
+- [미룰 핵심 용어]는 오늘 가르치지 않습니다. 그 용어를 쓰지 말고 뜻을 쉬운 말로 풀어 씁니다.
+- 내용(과학적 사실)은 바꾸지 않습니다. 줄 수와 줄 바꿈은 원래 글과 같게 둡니다.
+- 한국어로만, 고친 글만 출력합니다."""
+
+
+def adapt_to_pocket(state: AgentState, student_id: str, text: str, words_to_replace: list[str] | None = None,
+                    terms_to_defer: list[str] | None = None, terms_to_keep: list[str] | None = None,
+                    reason: str = "") -> dict:
+    s = _need_student(student_id)
+    rep, defer, keep = list(words_to_replace or []), list(terms_to_defer or []), list(terms_to_keep or [])
+    if not rep and not defer:
+        return {"adapted_text": text, "changes": [], "_summary": "바꿀 낱말이 없어 그대로 둠"}
+    changes, out = [], text
+    if llm.online():
+        known = ", ".join(pocket.known_examples(state, student_id, 150))
+        prompt = (f"[바꿀 낱말] {', '.join(rep) or '없음'}\n[남길 핵심 용어] {', '.join(keep) or '없음'}\n"
+                  f"[미룰 핵심 용어] {', '.join(defer) or '없음'}\n[학생이 아는 낱말] {known}\n\n[글]\n{text}")
+        out = llm.complete_text(ADAPT_SYSTEM, prompt)
+        if hangul_ratio(out) < 0.6 or not out.strip():
+            raise ToolError("고친 글이 한국어가 아니었습니다. 다시 시도해 주세요.")
+        changes = [{"from": w, "to": "(AI가 아는 말로 바꿈)"} for w in rep] + [{"from": t, "to": "(용어 없이 풀어 씀)"} for t in defer]
+    else:
+        band = 0
+        table = sorted(((form, opts) for w in data.word_levels() for form, opts in w["forms"].items()),
+                       key=lambda fo: -len(fo[0]))
+        for form, opts in table:
+            first = pocket.tokens(form)[0] if pocket.tokens(form) else form
+            if form in out and pocket.lookup(first)[0] in rep:
+                to = _pick_option(opts, band)
+                out = out.replace(form, to)
+                changes.append({"from": form, "to": to})
+        for term in defer:
+            for r in sorted(data.defer_terms().get(term, []), key=lambda r: -len(r["from"])):
+                if r["from"] in out and r["from"] != r["to"]:
+                    out = out.replace(r["from"], r["to"])
+                    changes.append({"from": r["from"].strip(), "to": r["to"] or "(문장 빼기)"})
+        out = re.sub(r"[ \t]+\n", "\n", out).strip()
+    left = [w for w in rep if w in [pocket.lookup(t)[0] for t in pocket.tokens(out)]]
+    return {
+        "adapted_text": out, "changes": changes, "deferred_terms": defer,
+        "not_replaced": left,
+        "_summary": (f"{len(changes)}곳을 {data.subj(s['display_name'].split(' ')[0])} 아는 말로 고침"
+                     + (f" · 용어 없이 풀어 쓴 핵심 용어: {', '.join(defer)}" if defer else "")
+                     + (f" · 못 바꾼 낱말: {', '.join(left)}" if left else "")),
+    }
+
+
+def record_word_feedback(state: AgentState, student_id: str, word: str, result: str, reason: str = "") -> dict:
+    _need_student(student_id)
+    try:
+        rec = pocket.record(state, student_id, word, result)
+    except ValueError as e:
+        raise ToolError(str(e))
+    label = {"known": "아는 낱말로 옮김 🎉", "learning": f"배우는 중 ({rec['correct']}/{KNOWN_AFTER_CORRECT})",
+             "unknown": "모르는 낱말로 표시 → 다음 글에서 쉬운 말로 바꿈"}[rec["status"]]
+    return {**rec, "_summary": f"'{word}' {label}"}
+
+
 # ── Claude 에게 보여줄 도구 설명 ──────────────────────────────────
 
 _REASON = {"type": "string", "description": "지금 이 도구를 쓰는 이유. 교사가 화면에서 읽을 한국어 한 문장."}
@@ -630,6 +746,28 @@ TOOL_SCHEMAS = [
                     "학생 질문에 답할 때 가장 먼저 쓰고, 그 결과를 translate_text 로 모국어로 옮긴다.",
      "input_schema": _schema({"student_id": {"type": "string"}, "question": {"type": "string"}},
                              ["student_id", "question"])},
+    {"name": "get_word_pocket",
+     "description": "학생의 '낱말 주머니'(아는 낱말 수, 배우는 중인 낱말, 학생이 '몰라요'라고 한 낱말)와 교사가 정한 기준을 본다. "
+                    "학생용 글을 쓰기 전에 먼저 쓴다.",
+     "input_schema": _schema({"student_id": {"type": "string"}}, ["student_id"])},
+    {"name": "check_coverage",
+     "description": "글을 낱말 단위로 나눠 이 학생이 아는 낱말 비율(기준 80% 이상)과 새 낱말 수(기준 3개까지)를 잰다. "
+                    "통과하지 못하면 words_to_replace(아는 말로 바꿀 낱말), terms_to_keep(오늘 가르칠 핵심 용어), "
+                    "terms_to_defer(오늘은 미룰 핵심 용어)를 adapt_to_pocket 에 그대로 넘긴다.",
+     "input_schema": _schema({"student_id": {"type": "string"}, "text": {"type": "string"}}, ["student_id", "text"])},
+    {"name": "adapt_to_pocket",
+     "description": "check_coverage 결과대로 글을 이 학생이 아는 낱말로 고쳐 쓴다. 고친 뒤에는 반드시 check_coverage 로 다시 잰다(최대 2번 반복).",
+     "input_schema": _schema({"student_id": {"type": "string"}, "text": {"type": "string"},
+                              "words_to_replace": {"type": "array", "items": {"type": "string"}},
+                              "terms_to_keep": {"type": "array", "items": {"type": "string"}},
+                              "terms_to_defer": {"type": "array", "items": {"type": "string"}}},
+                             ["student_id", "text"])},
+    {"name": "record_word_feedback",
+     "description": "학생 반응을 낱말 주머니에 기록한다. result='dont_know'(몰라요) 이면 모르는 낱말로, "
+                    "'correct'(맞혔어요) 이면 맞힌 횟수를 올려 3번이면 아는 낱말로 옮긴다.",
+     "input_schema": _schema({"student_id": {"type": "string"}, "word": {"type": "string"},
+                              "result": {"type": "string", "enum": ["dont_know", "correct"]}},
+                             ["student_id", "word", "result"])},
     {"name": "find_difficult_words",
      "description": "글에서 교과 핵심 어휘 사전에 있는 어려운 낱말을 찾는다.",
      "input_schema": _schema({"text": {"type": "string"}}, ["text"])},
@@ -712,6 +850,10 @@ TOOL_FUNCS = {
     "present_bilingual": present_bilingual,
     "present_support_plan": present_support_plan,
     "answer_student_question": answer_student_question,
+    "get_word_pocket": get_word_pocket,
+    "check_coverage": check_coverage,
+    "adapt_to_pocket": adapt_to_pocket,
+    "record_word_feedback": record_word_feedback,
     "check_known_words": check_known_words,
     "personalize_wording": personalize_wording,
     "present_personalized": present_personalized,
@@ -733,6 +875,10 @@ TOOL_LABELS = {
     "present_bilingual": "↔️ 이중언어 나란히 보여주기",
     "present_support_plan": "📋 지원 계획 보여주기",
     "answer_student_question": "💡 쉬운 한국어로 답 쓰기",
+    "get_word_pocket": "🧺 낱말 주머니 보기",
+    "check_coverage": "📏 아는 낱말 비율 재기",
+    "adapt_to_pocket": "🛠️ 학생이 아는 낱말로 고쳐 쓰기",
+    "record_word_feedback": "📝 학생 반응 기록",
     "check_known_words": "🧩 학생이 아는 낱말인지 확인",
     "personalize_wording": "🪄 학생이 아는 말로 바꾸기",
     "present_personalized": "📄 학생 맞춤 글 보여주기",

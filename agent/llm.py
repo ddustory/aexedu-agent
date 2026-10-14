@@ -128,7 +128,21 @@ def offline_rewrite(text: str, level: int) -> str:
 
 
 def offline_translate(text: str, lang: str) -> str:
-    for item in data.offline_demo()["translations"]:
-        if _norm(item["source"]) == _norm(text) and lang in item:
+    items = [i for i in data.offline_demo()["translations"] if lang in i]
+    for item in items:
+        if _norm(item["source"]) == _norm(text):
             return item[lang]
-    raise OfflineUnsupported("오프라인 시연 모드에서는 예시 문장만 번역할 수 있어요. 새 문장은 API 키를 넣으면 됩니다.")
+    # 학생 맞춤으로 조금 바뀐 글: 줄마다 가장 비슷한 준비된 줄의 번역을 쓴다
+    import difflib
+    pairs = []
+    for item in items:
+        src, tr = item["source"].split("\n"), item[lang].split("\n")
+        if len(src) == len(tr):
+            pairs += list(zip(src, tr))
+    out = []
+    for line in text.strip().split("\n"):
+        best = max(pairs, key=lambda p: difflib.SequenceMatcher(None, p[0], line).ratio(), default=None)
+        if not best or difflib.SequenceMatcher(None, best[0], line).ratio() < 0.4:
+            raise OfflineUnsupported("오프라인 시연 모드에서는 예시 문장만 번역할 수 있어요. 새 문장은 AI 모드에서 됩니다.")
+        out.append(best[1])
+    return "\n".join(out)

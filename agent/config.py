@@ -58,3 +58,13 @@ CHECK_DOWN_THRESHOLD = 50  # 이 미만이면 지원 늘리기(단계 -1)
 # 쉬운 한국어 가독성 기준 (어절 = 띄어쓰기 단위)
 READABILITY_MAX_AVG_EOJEOL = 8
 READABILITY_MAX_SENTENCE_EOJEOL = 12
+
+# ── 학생별 낱말 주머니 기준 (교사 확정 · 2026-10-15) ───────────────
+# 학생에게 주는 글은 '아는 낱말' 비율이 이 % 이상이어야 한다.
+COVERAGE_MIN = 80
+# 한 글에 남겨 둘 새 낱말(모르는 낱말)은 이 개수까지. 오늘 배울 핵심 용어도 여기에 들어간다.
+MAX_NEW_WORDS = 3
+# 이만큼 맞히면(맞게 쓰거나 문제를 맞히면) '아는 낱말'로 옮긴다.
+KNOWN_AFTER_CORRECT = 3
+# 기준을 넘지 못하면 다시 고쳐 쓰는 최대 횟수
+MAX_ADAPT_ROUNDS = 2

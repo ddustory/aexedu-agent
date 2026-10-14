@@ -46,3 +46,39 @@ def word_levels() -> list[dict]:
 
 def peers() -> list[dict]:
     return _load("peers.json")["peers"]
+
+
+def lexicon() -> dict:
+    return _load("lexicon.json")
+
+
+def defer_terms() -> dict:
+    return _load("defer_terms.json")["terms"]
+
+
+def target_terms() -> list[str]:
+    """모든 지문의 '오늘 배울 핵심 용어' (중요한 순서)."""
+    out = []
+    for p in passages():
+        for t in p.get("target_terms", []):
+            if t not in out:
+                out.append(t)
+    return out
+
+
+def subj(name: str) -> str:
+    """이름 뒤에 '이/가'를 알맞게 붙인다 (린 → 린이, 바트 → 바트가)."""
+    if not name:
+        return name
+    c = name[-1]
+    if "\uac00" <= c <= "\ud7a3":
+        return name + ("이" if (ord(c) - 0xAC00) % 28 else "가")
+    return name + "가"
+
+
+def topic(word: str) -> str:
+    """낱말 뒤에 '은/는'을 알맞게 붙인다."""
+    c = word[-1] if word else ""
+    if "\uac00" <= c <= "\ud7a3":
+        return word + ("은" if (ord(c) - 0xAC00) % 28 else "는")
+    return word + "는"

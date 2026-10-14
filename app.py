@@ -8,7 +8,10 @@ import streamlit as st
 
 from agent import data, llm, service
 from agent.config import LANGUAGE_NAMES, SCAFFOLD_LEVELS
-from agent.tools import MARK_CLOSE, MARK_OPEN, NOTE_CLOSE, NOTE_OPEN, TOOL_LABELS, AgentState, personalize_wording
+from agent import pocket
+from agent.config import COVERAGE_MIN, KNOWN_AFTER_CORRECT, MAX_NEW_WORDS
+from agent.tools import (MARK_CLOSE, MARK_OPEN, NOTE_CLOSE, NOTE_OPEN, TOOL_LABELS, AgentState, get_word_pocket,
+                         personalize_wording, record_word_feedback)
 
 st.set_page_config(page_title="다문화 학습 지원 에이전트", page_icon="🌏", layout="wide")
 
@@ -89,7 +92,19 @@ with st.sidebar:
             st.markdown(f"**{lv['name']}**  \n{lv['policy']}")
         st.caption("진단: 80% 이상 3단계 / 50% 이상 2단계 / 그 미만 1단계\n\n"
                    "확인 문제: 75% 이상 → 지원 줄이기, 50% 미만 → 지원 늘리기")
-    if st.button("🔄 처음부터 다시 (단계 초기화)", use_container_width=True):
+    st.divider()
+    first = stu["display_name"].split(" ")[0]
+    st.subheader(f"🧺 {first}의 낱말 주머니")
+    pk = get_word_pocket(state, sid)
+    st.markdown(f"아는 낱말 **{pk['known_count']}개**")
+    if pk["learning"]:
+        st.markdown("배우는 중: " + ", ".join(f"{w} ({n}/{KNOWN_AFTER_CORRECT})" for w, n in pk["learning"].items()))
+    if pk["newly_known"]:
+        st.markdown("새로 알게 된 낱말 🎉: " + ", ".join(pk["newly_known"]))
+    if pk["marked_unknown"]:
+        st.markdown("'몰라요' 표시: " + ", ".join(pk["marked_unknown"]))
+    st.caption(f"기준: 아는 낱말 {COVERAGE_MIN}% 이상 · 새 낱말 {MAX_NEW_WORDS}개까지 · {KNOWN_AFTER_CORRECT}번 맞히면 아는 낱말")
+    if st.button("🔄 처음부터 다시 (단계·주머니 초기화)", use_container_width=True):
         st.session_state.agent_state = AgentState()
         st.session_state.runs = {}
         st.rerun()
@@ -164,9 +179,9 @@ def render_cards(cards: list[dict]):
         st.write("")
 
 
-def render_pair(korean: str, native: str, lang: str):
+def render_pair(korean: str, native: str, lang: str, ko_label: str = "쉬운 한국어"):
     k, n = korean.strip().split("\n"), native.strip().split("\n")
-    head = f"<tr><th>🇰🇷 쉬운 한국어</th><th>🌐 {LANGUAGE_NAMES[lang]}</th></tr>"
+    head = f"<tr><th>🇰🇷 {esc(ko_label)}</th><th>🌐 {LANGUAGE_NAMES[lang]}</th></tr>"
     if len(k) == len(n):
         rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in zip(k, n))
     else:
@@ -174,31 +189,76 @@ def render_pair(korean: str, native: str, lang: str):
     st.markdown(f"<table class='pair' style='width:100%'>{head}{rows}</table>", unsafe_allow_html=True)
 
 
-def render_output(out: dict):
+def render_coverage(cov: dict | None, s: dict, key: str):
+    """'낱말 주머니'로 잰 결과와, 학생 반응(몰라요/맞혔어요) 버튼."""
+    if not cov:
+        return
+    sid_ = s["id"]
+    name = s["display_name"].split(" ")[0]
+    ok = "✅ 기준 통과" if cov["passed"] else "⚠️ 기준 미달 (교사 확인)"
+    st.markdown(f"**🧺 {name}의 낱말 주머니로 잰 결과** · {ok}  \n"
+                f"아는 낱말 **{cov['coverage']}%** (기준 {COVERAGE_MIN}% 이상) · "
+                f"새 낱말 **{len(cov['new_words'])}개** (기준 {MAX_NEW_WORDS}개 이하)")
+    st.progress(min(cov["coverage"], 100) / 100)
+    words = list(dict.fromkeys(cov["new_words"] + cov["learning_words"]))
+    if words:
+        st.caption(f"{name}의 반응을 눌러 주세요. {KNOWN_AFTER_CORRECT}번 맞히면 아는 낱말이 되고, '몰라요'는 다음 글에서 쉬운 말로 바뀌어요.")
+    for w in words:
+        stt = pocket.status(state, sid_, w, pocket.lookup(w)[1])
+        rec = state.pocket.get(sid_, {}).get(w, {})
+        tag = {"known": "✔ 아는 낱말", "learning": f"배우는 중 {rec.get('correct', 0)}/{KNOWN_AFTER_CORRECT}",
+               "unknown": "새 낱말"}[stt]
+        c1, c2, c3 = st.columns([3, 2, 2])
+        c1.markdown(f"**{w}** <small style='color:#6b7280'>· {tag}</small>", unsafe_allow_html=True)
+        if c2.button("😕 몰라요", key=f"fb:{key}:{w}:no", use_container_width=True):
+            r = record_word_feedback(state, sid_, w, "dont_know")
+            st.toast(r["_summary"])
+            st.rerun()
+        if c3.button("✅ 맞혔어요", key=f"fb:{key}:{w}:ok", use_container_width=True):
+            r = record_word_feedback(state, sid_, w, "correct")
+            st.toast(r["_summary"])
+            st.rerun()
+    others = [w for w in cov.get("known_list", []) if len(w) >= 2]
+    if others:
+        pick = st.multiselect("아는 낱말로 셌지만 학생이 모른다고 한 낱말이 있나요?", others, key=f"fbm:{key}",
+                              placeholder="낱말을 고르세요")
+        if pick and st.button("😕 고른 낱말을 '몰라요'로 기록", key=f"fbmb:{key}"):
+            for w in pick:
+                record_word_feedback(state, sid_, w, "dont_know")
+            st.toast(f"{len(pick)}개 낱말을 '몰라요'로 기록했어요. 다시 만들면 쉬운 말로 바뀌어요.")
+            st.rerun()
+
+
+def render_output(out: dict, key: str = ""):
     s = data.student(out["student_id"])
     lang = s["home_language"]
+    name = s["display_name"].split(" ")[0]
     if out["kind"] == "lesson":
         lv = out["level"]
         st.markdown(f"<span class='lv'>{lv}단계</span> **{SCAFFOLD_LEVELS[lv]['name']}** · {s['display_name']}",
                     unsafe_allow_html=True)
         st.caption(SCAFFOLD_LEVELS[lv]["policy"])
         if out["native_text"]:
-            render_pair(out["korean_text"], out["native_text"], lang)
+            render_pair(out["korean_text"], out["native_text"], lang, f"{name} 맞춤 한국어")
         else:
-            st.markdown("**📖 학생용 지문**")
+            st.markdown(f"**📖 {name} 맞춤 지문**")
             st.info(out["korean_text"])
         render_cards(out["vocab_cards"])
         if out["teacher_note"]:
             st.markdown(f"**👩‍🏫 교사용 수업 팁**  \n{out['teacher_note']}")
+        render_coverage(out.get("coverage"), s, key)
     elif out["kind"] == "bilingual":
         title = "🙋 학생 질문에 대한 답" if out["mode"] == "answer" else "👩‍🏫 교사 설명 나란히 보기"
         st.markdown(f"**{title}** · {s['display_name']}")
         if out["original_text"] and out["mode"] == "answer":
             st.markdown(f"> 학생 질문: {out['original_text']}")
-        render_pair(out["korean_text"], out["native_text"], lang)
+        render_pair(out["korean_text"], out["native_text"], lang,
+                    f"{name} 맞춤 한국어" if out["mode"] == "answer" else "선생님 설명")
         render_cards(out["vocab_cards"])
+        render_coverage(out.get("coverage"), s, key)
     elif out["kind"] == "personal":
         render_personal(out, s)
+        render_coverage(out.get("coverage"), s, key)
     elif out["kind"] == "peers":
         render_peers(out, s)
     elif out["kind"] == "plan":
@@ -305,8 +365,8 @@ def run_and_show(key: str, scenario: str, **kwargs):
     with result_box:
         if not run["outputs"]:
             st.caption("아직 표시할 결과가 없습니다.")
-        for out in run["outputs"]:
-            render_output(out)
+        for i, out in enumerate(run["outputs"]):
+            render_output(out, f"{key}:{i}")
 
 
 # ── 탭 ───────────────────────────────────────────────────────────

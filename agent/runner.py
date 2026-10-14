@@ -49,9 +49,11 @@ SYSTEM_PROMPT = """당신은 한국 초등학교 교실의 '포용·다문화 �
 7. 모든 도구 호출의 reason 에 '왜 지금 이 도구를 쓰는지'를 교사가 이해할 수 있는 한국어 한 문장으로 씁니다.
 8. 정해진 기준에 없는 교육적 판단(예: 기준표 밖의 단계 변경)은 스스로 하지 말고, 교사에게 확인을 요청하는 말로 남깁니다.
 9. 번역은 교사 확인용 보조 자료임을 기억하고, 확신이 없는 번역은 teacher_note 에 적습니다.
-10. 학생용 한국어 글을 만들면 check_known_words 로 이 학생이 모를 낱말을 찾고, 있으면 personalize_wording 으로
-    학생이 아는 말로 바꿉니다. 같은 글이라도 학생마다 아는 낱말이 달라 결과가 달라야 합니다. 교과 핵심 용어는 바꾸지 않습니다.
-    (1단계 학생의 모국어 번역은 personalize_wording 전의 글로 만듭니다.)
+10. 학생에게 줄 한국어 글(수업 자료, 질문의 답)은 반드시 '낱말 주머니'에 맞춥니다:
+    get_word_pocket 으로 학생을 본 뒤 글을 쓰고 → check_coverage 로 잽니다(기준: 아는 낱말 80% 이상, 새 낱말 3개까지).
+    기준 미달이면 check_coverage 가 준 words_to_replace / terms_to_keep / terms_to_defer 를 그대로 adapt_to_pocket 에 넘겨
+    고치고, 다시 check_coverage 로 잽니다(최대 2번). 같은 글이라도 학생마다 아는 낱말이 달라 결과가 달라야 합니다.
+    미룬 핵심 용어가 있으면 teacher_note 에 '다음 수업의 새 낱말'로 적습니다. 모국어 번역은 맞춘 뒤의 글로 만듭니다.
 11. 학생이 '좀 더 쉽게'를 요청하면 ease_step 을 요청 횟수로 올려 다시 맞추고 present_personalized 로 보여줍니다.
     needs_full_rewrite 가 true 면 rewrite_easy_korean(level=1)로 짧게 다시 쓴 뒤 그 글을 맞춥니다.
 12. 또래 연결 요청은 지원 단계를 확인(없으면 진단)한 뒤 find_peer_group → present_peer_group 으로 처리합니다.
@@ -228,8 +230,9 @@ def goal_question(student_id: str, question: str) -> str:
     return (f"수업 중 학생 {student_id} 가 모국어로 이렇게 질문했습니다:\n\"{question}\"\n"
             f"오늘 수업 내용(물의 순환)과 연결해, 쉬운 한국어와 학생 모국어로 함께 답해 주세요. "
             f"답에 나오는 핵심 낱말은 어휘 카드로 붙여 주세요.\n"
-            f"(순서: get_student_profile → answer_student_question 으로 한국어 답 → translate_text 로 모국어 번역 → "
-            f"find_difficult_words → make_vocab_cards → present_bilingual 에 korean_text=한국어 답, native_text=번역)")
+            f"(순서: get_student_profile → get_word_pocket → answer_student_question 으로 한국어 답 → check_coverage → "
+            f"(기준 미달이면 adapt_to_pocket → check_coverage) → translate_text 로 모국어 번역 → "
+            f"make_vocab_cards → present_bilingual 에 korean_text=한국어 답, native_text=번역)")
 
 
 def goal_teacher_sentence(student_id: str, sentence: str) -> str:
