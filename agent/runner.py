@@ -227,7 +227,9 @@ def goal_lesson(student_id: str, passage_text: str, passage_id: str | None) -> s
 def goal_question(student_id: str, question: str) -> str:
     return (f"수업 중 학생 {student_id} 가 모국어로 이렇게 질문했습니다:\n\"{question}\"\n"
             f"오늘 수업 내용(물의 순환)과 연결해, 쉬운 한국어와 학생 모국어로 함께 답해 주세요. "
-            f"답에 나오는 핵심 낱말은 어휘 카드로 붙여 주세요.")
+            f"답에 나오는 핵심 낱말은 어휘 카드로 붙여 주세요.\n"
+            f"(순서: get_student_profile → answer_student_question 으로 한국어 답 → translate_text 로 모국어 번역 → "
+            f"find_difficult_words → make_vocab_cards → present_bilingual 에 korean_text=한국어 답, native_text=번역)")
 
 
 def goal_teacher_sentence(student_id: str, sentence: str) -> str:

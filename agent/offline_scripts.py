@@ -113,13 +113,15 @@ def question_script(student_id: str, question: str):
         yield Step(texts=["오프라인 시연 모드에서는 준비된 예시 질문에만 답할 수 있어요. "
                           "새 질문은 API 키를 넣으면 실제 AI가 답합니다."])
         return
-    cards = (yield _say(f"학생이 {LANGUAGE_NAMES[lang]}로 \"{preset['question_ko']}\"라고 물었습니다. "
-                        f"오늘 배운 낱말과 연결해 답하겠습니다.",
-                        _call("make_vocab_cards", "답에 꼭 필요한 오늘의 핵심 낱말을 어휘 카드로 준비합니다.",
-                              words=preset["related_words"], language=lang)))[0]["cards"]
+    korean = (yield _say(f"학생이 {LANGUAGE_NAMES[lang]}로 \"{preset['question_ko']}\"라고 물었습니다. "
+                         f"오늘 배운 낱말과 연결해 답하겠습니다.",
+                         _call("answer_student_question", "먼저 쉬운 한국어로 답을 씁니다.",
+                               student_id=student_id, question=question)))[0]["korean_answer"]
+    cards = (yield _call("make_vocab_cards", "답에 꼭 필요한 오늘의 핵심 낱말을 어휘 카드로 준비합니다.",
+                         words=preset["related_words"], language=lang))[0]["cards"]
     yield _call("present_bilingual", "쉬운 한국어 답과 모국어 답을 나란히 보여줍니다.",
                 student_id=student_id, kind="answer", original_text=question,
-                korean_text=preset["korean_easy"], native_text=preset["native"], vocab_cards=cards)
+                korean_text=korean, native_text=preset["native"], vocab_cards=cards)
     yield Step(texts=[f"학생의 {LANGUAGE_NAMES[lang]} 질문에 쉬운 한국어와 {LANGUAGE_NAMES[lang]}로 함께 답했습니다. "
                       f"관련 낱말 {len(cards)}개를 카드로 붙였으니, 한국어 문장을 함께 소리 내어 읽어 보게 해 주세요."])
 

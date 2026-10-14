@@ -293,6 +293,7 @@ def grade_check_answers(state: AgentState, passage_id: str, results: list[bool],
 def present_lesson_material(state: AgentState, student_id: str, level: int, korean_text: str,
                             vocab_cards: list[dict], native_text: str = "", teacher_note: str = "",
                             reason: str = "") -> dict:
+    _need_korean(korean_text, "korean_text")
     state.outputs.append({
         "kind": "lesson", "student_id": student_id, "level": level,
         "korean_text": korean_text, "native_text": native_text,
@@ -301,9 +302,58 @@ def present_lesson_material(state: AgentState, student_id: str, level: int, kore
     return {"shown": True, "_summary": f"학습 자료를 화면에 표시함 ({level}단계)"}
 
 
+def hangul_ratio(text: str) -> float:
+    """글자 중 한글 비율 (공백·숫자·문장부호 제외)."""
+    letters = [c for c in text or "" if c.isalpha()]
+    if not letters:
+        return 0.0
+    return sum("\uac00" <= c <= "\ud7a3" for c in letters) / len(letters)
+
+
+def _need_korean(text: str, field: str):
+    if hangul_ratio(text) < 0.6:
+        raise ToolError(f"{field} 에 한국어가 아닌 글이 들어왔습니다. {field} 는 반드시 쉬운 한국어로 써야 합니다. "
+                        "학생 질문의 답은 answer_student_question 으로, 모국어는 translate_text 로 따로 만드세요.")
+
+
+ANSWER_SYSTEM = """당신은 한국 초등학교 교사입니다. 한국어를 배우는 이주배경 학생의 질문에 답합니다.
+반드시 지킬 것:
+- 답은 오직 한국어로만 씁니다. 학생의 모국어를 쓰지 않습니다.
+- 쉬운 한국어, '-해요'체, 한 문장은 10어절 이하, 3~4문장, 한 문장씩 줄을 바꿉니다.
+- 질문을 그대로 되풀이하지 말고, 왜 그런지 과학적 까닭을 차례대로 설명합니다.
+- 오늘 수업 낱말(수증기, 증발, 응결, 구름, 물방울, 강수)을 알맞게 씁니다.
+예) 질문: 비는 왜 와요?
+답:
+바다와 강의 물이 수증기가 되어 하늘로 올라가요.
+하늘은 차가워서 수증기가 작은 물방울이 돼요.
+물방울이 모여 구름이 되고, 점점 무거워져요.
+무거워진 물방울이 땅으로 떨어지는 것이 비예요.
+답 글만 출력합니다."""
+
+
+def answer_student_question(state: AgentState, student_id: str, question: str, reason: str = "") -> dict:
+    s = _need_student(student_id)
+    if llm.online():
+        prompt = (f"학생 모국어: {s['home_language_name']}\n학생 질문(모국어): {question}\n"
+                  "먼저 질문의 뜻을 이해한 뒤, 쉬운 한국어로만 답하세요.")
+        out = llm.complete_text(ANSWER_SYSTEM, prompt)
+        if hangul_ratio(out) < 0.6:  # 작은 모델이 모국어로 답하면 한 번 더 분명하게 요청
+            out = llm.complete_text(ANSWER_SYSTEM, prompt + "\n\n주의: 방금 답이 한국어가 아니었습니다. 한국어로만 다시 쓰세요.")
+        _need_korean(out, "answer")
+    else:
+        preset = data.offline_demo()["student_questions"].get(s["home_language"], {})
+        if " ".join(preset.get("question", "").split()) != " ".join(question.split()):
+            raise llm.OfflineUnsupported("오프라인 시연 모드에서는 예시 질문에만 답할 수 있어요.")
+        out = preset["korean_easy"]
+    return {"korean_answer": out, "_summary": f"쉬운 한국어 답 {len(_sentences(out))}문장 작성"}
+
+
 def present_bilingual(state: AgentState, student_id: str, kind: str, korean_text: str, native_text: str,
                       original_text: str = "", vocab_cards: list[dict] | None = None,
                       reason: str = "") -> dict:
+    _need_korean(korean_text, "korean_text")
+    if hangul_ratio(native_text) > 0.6:
+        raise ToolError("native_text 가 한국어입니다. translate_text 로 학생 모국어 번역을 만들어 native_text 에 넣으세요.")
     state.outputs.append({
         "kind": "bilingual", "mode": kind, "student_id": student_id,
         "original_text": original_text, "korean_text": korean_text,
@@ -575,6 +625,11 @@ TOOL_SCHEMAS = [
                     "3단계는 원문을 유지하며 어려운 낱말에 괄호 풀이만 넣는다.",
      "input_schema": _schema({"text": {"type": "string"}, "level": {"type": "integer", "enum": [1, 2, 3]}},
                              ["text", "level"])},
+    {"name": "answer_student_question",
+     "description": "학생이 모국어로 한 질문에 쉬운 한국어로만 답을 쓴다(3~4문장, 과학적 까닭 설명). "
+                    "학생 질문에 답할 때 가장 먼저 쓰고, 그 결과를 translate_text 로 모국어로 옮긴다.",
+     "input_schema": _schema({"student_id": {"type": "string"}, "question": {"type": "string"}},
+                             ["student_id", "question"])},
     {"name": "find_difficult_words",
      "description": "글에서 교과 핵심 어휘 사전에 있는 어려운 낱말을 찾는다.",
      "input_schema": _schema({"text": {"type": "string"}}, ["text"])},
@@ -656,6 +711,7 @@ TOOL_FUNCS = {
     "present_lesson_material": present_lesson_material,
     "present_bilingual": present_bilingual,
     "present_support_plan": present_support_plan,
+    "answer_student_question": answer_student_question,
     "check_known_words": check_known_words,
     "personalize_wording": personalize_wording,
     "present_personalized": present_personalized,
@@ -676,6 +732,7 @@ TOOL_LABELS = {
     "present_lesson_material": "📄 학습 자료 보여주기",
     "present_bilingual": "↔️ 이중언어 나란히 보여주기",
     "present_support_plan": "📋 지원 계획 보여주기",
+    "answer_student_question": "💡 쉬운 한국어로 답 쓰기",
     "check_known_words": "🧩 학생이 아는 낱말인지 확인",
     "personalize_wording": "🪄 학생이 아는 말로 바꾸기",
     "present_personalized": "📄 학생 맞춤 글 보여주기",
