@@ -98,6 +98,51 @@ class ClaudeBrain:
         return step
 
 
+def _ollama_tools() -> list[dict]:
+    return [{"type": "function", "function": {"name": t["name"], "description": t["description"],
+                                              "parameters": t["input_schema"]}} for t in TOOL_SCHEMAS]
+
+
+class LocalBrain:
+    """노트북 안의 오픈 모델(Ollama)이 다음 행동을 결정한다. 인터넷·API 키가 필요 없다."""
+
+    def __init__(self, goal: str):
+        self.label = f"로컬 AI ({llm.LOCAL_MODEL} · 이 컴퓨터 안에서 실행)"
+        self.messages = [{"role": "user", "content": goal}]
+        self.tools = _ollama_tools()
+        self.counter = 0
+        self.pending: list[ToolCall] = []
+
+    def next(self, results: list[dict] | None) -> Step:
+        if results:
+            names = {c.id: c.name for c in self.pending}
+            for r in results:
+                self.messages.append({"role": "tool", "tool_name": names.get(r["id"], ""), "content": r["content"]})
+        msg = llm.local_chat(self.messages, tools=self.tools, system=SYSTEM_PROMPT + LOCAL_HINT)
+        self.messages.append({k: v for k, v in msg.items() if k in ("role", "content", "tool_calls")})
+        step = Step()
+        if (msg.get("content") or "").strip():
+            step.texts.append(msg["content"].strip())
+        for tc in msg.get("tool_calls") or []:
+            fn = tc.get("function", {})
+            args = fn.get("arguments") or {}
+            if isinstance(args, str):
+                try:
+                    args = json.loads(args)
+                except ValueError:
+                    args = {}
+            self.counter += 1
+            step.calls.append(ToolCall(f"local_{self.counter}", fn.get("name", ""), dict(args)))
+        self.pending = step.calls
+        return step
+
+
+LOCAL_HINT = """
+
+(로컬 모델 안내) 한 번에 도구 하나씩 부르고, 도구 결과를 읽은 뒤 다음 도구를 고르세요.
+도구 이름과 입력 형식을 정확히 지키고, 모든 설명은 한국어로 씁니다."""
+
+
 class ScriptedBrain:
     """오프라인 시연용 두뇌. 미리 짜 둔 시나리오가 도구 결과를 보고 다음 도구를 고른다."""
 

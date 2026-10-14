@@ -59,8 +59,11 @@ demo = data.offline_demo()
 # ── 머리말 ───────────────────────────────────────────────────────
 st.title("🌏 다문화 학습 지원 에이전트")
 st.caption("이주배경 학생을 위한 쉬운 한국어 · 이중언어 지원 · 맞춤형 비계 조정 에이전트  |  2026 Ax-Edu 해커톤 ③ 포용·다문화")
-mode_html = (f'<span class="mode on">🟢 실시간 AI 모드 (Claude)</span>' if ONLINE
-             else f'<span class="mode off">🎬 오프라인 시연 모드 (미리 준비된 시나리오 · 도구는 실제 실행)</span>')
+BACKEND = llm.backend()
+mode_html = {
+    "claude": '<span class="mode on">🟢 실시간 AI 모드 (Claude)</span>',
+    "local": f'<span class="mode on">💻 로컬 AI 모드 ({llm.LOCAL_MODEL} · 이 노트북 안에서 실행 · 인터넷·사용료 없음)</span>',
+}.get(BACKEND, '<span class="mode off">🎬 오프라인 시연 모드 (미리 준비된 시나리오 · 도구는 실제 실행)</span>')
 st.markdown(mode_html, unsafe_allow_html=True)
 st.markdown('<div class="notice">⚠️ <b>교사 확인용 보조 자료</b>입니다. 번역과 쉬운 한국어 변환은 완벽하지 않을 수 있으니 '
             '수업에 쓰기 전에 교사가 확인해 주세요. 화면의 학생은 모두 <b>가상 인물</b>입니다.</div>',
@@ -92,7 +95,10 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-    if ONLINE:
+    if BACKEND == "local":
+        st.success(f"노트북 안의 AI({llm.LOCAL_MODEL})가 도구를 고릅니다. 학생 정보가 컴퓨터 밖으로 나가지 않아요. "
+                   "작은 모델이라 Claude보다 느리거나 번역이 서툴 수 있어요.")
+    elif ONLINE:
         st.success("Claude API 키가 연결되어 있어 실제 AI가 도구를 고릅니다.")
     else:
         st.info("API 키 없이 실행 중입니다. 예시 지문·예시 질문으로 전체 과정을 시연할 수 있어요. "

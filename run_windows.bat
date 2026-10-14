@@ -27,6 +27,12 @@ if not exist "%USERPROFILE%\.streamlit\credentials.toml" (
   echo email = "">> "%USERPROFILE%\.streamlit\credentials.toml"
 )
 
+REM Local AI (only if Ollama is installed): download the laptop model once
+where ollama >nul 2>nul
+if not errorlevel 1 (
+  ollama list | findstr /b /c:"qwen3:8b" >nul || ollama pull qwen3:8b
+)
+
 .venv312\Scripts\python.exe -m streamlit run app.py --browser.gatherUsageStats false
 pause
 exit /b

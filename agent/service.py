@@ -13,8 +13,13 @@ SCENARIOS = {
 }
 
 
-def mode_label() -> str:
-    return runner.ClaudeBrain.label if llm.online() else runner.ScriptedBrain.label
+def make_brain(goal: str, script):
+    b = llm.backend()
+    if b == "claude":
+        return runner.ClaudeBrain(goal)
+    if b == "local":
+        return runner.LocalBrain(goal)
+    return runner.ScriptedBrain(script)
 
 
 def run(scenario: str, state: AgentState, **kwargs):
@@ -36,6 +41,6 @@ def run(scenario: str, state: AgentState, **kwargs):
         goal = goal_fn(kwargs["student_id"], kwargs["passage_id"], kwargs["results"])
         script_args = (kwargs["student_id"], kwargs["passage_id"], kwargs["results"])
 
-    brain = runner.ClaudeBrain(goal) if llm.online() else runner.ScriptedBrain(script_fn(*script_args))
+    brain = make_brain(goal, script_fn(*script_args))
     yield {"type": "goal", "text": goal, "mode": brain.label}
     yield from runner.run_agent(brain, state)
