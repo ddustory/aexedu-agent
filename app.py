@@ -229,6 +229,21 @@ def render_coverage(cov: dict | None, s: dict, key: str):
             st.rerun()
 
 
+def render_curriculum(link: dict | None):
+    if not link:
+        return
+    with st.expander("📚 교육과정 연결 (2022 개정 국어과 교육과정)"):
+        st.markdown("**이 자료가 겨냥하는 성취기준**")
+        for x in link["standards"]:
+            st.markdown(f"- **{x['code']}** {x['text']}")
+        if link.get("note"):
+            st.caption(link["note"])
+        st.markdown("**교육과정의 다문화 배경 학습자 지도 지침 → 이 에이전트의 기능**")
+        for g in link["guidance"]:
+            st.markdown(f"> {g['text']}  \n> <small>— 국어과 교육과정({g['band']})</small>", unsafe_allow_html=True)
+            st.markdown("→ " + " · ".join(g["features"]))
+
+
 def render_output(out: dict, key: str = ""):
     s = data.student(out["student_id"])
     lang = s["home_language"]
@@ -247,6 +262,7 @@ def render_output(out: dict, key: str = ""):
         if out["teacher_note"]:
             st.markdown(f"**👩‍🏫 교사용 수업 팁**  \n{out['teacher_note']}")
         render_coverage(out.get("coverage"), s, key)
+        render_curriculum(out.get("curriculum"))
     elif out["kind"] == "bilingual":
         title = "🙋 학생 질문에 대한 답" if out["mode"] == "answer" else "👩‍🏫 교사 설명 나란히 보기"
         st.markdown(f"**{title}** · {s['display_name']}")
@@ -325,7 +341,8 @@ def render_peers(out: dict, s: dict):
     st.write("")
     st.success(out["message"])
     st.markdown(f"**함께 할 활동**: {out['activity']}  \n**대화 언어**: {out['talk_language']}")
-    st.caption("미리보기입니다. 친구와 센터는 모두 가상이며, 실제 온라인 모둠 방 연결은 본선 확장 계획입니다.")
+    st.caption("국어과 교육과정은 다문화 배경 학습자에게 '수준별 교과 수업, 협력 수업'과, 자기 문화를 소개하는 "
+               "'상호 문화적 이해'를 권합니다. 미리보기이며 친구와 센터는 모두 가상이고, 실제 온라인 모둠 방 연결은 본선 확장 계획입니다.")
 
 
 def run_and_show(key: str, scenario: str, **kwargs):

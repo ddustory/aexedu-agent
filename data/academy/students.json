@@ -1,5 +1,5 @@
 {
- "_note": "시연용 가상 데이터입니다. 실제 학생·시험이 아닙니다. 성취기준은 예시이며 교사가 실제 코드로 바꿔 쓸 수 있습니다.",
+ "_note": "시연용 가상 데이터입니다. 실제 학생·시험이 아닙니다. 성취기준 코드와 문장은 2022 개정 국어과 교육과정(교육부 고시 제2022-33호)의 실제 중학교 성취기준이며, 문항은 그 성취기준을 평가하는 가상 문항입니다.",
  "students": [
   {
    "id": "M101",
@@ -44,6 +44,198 @@
   {
    "id": "M106",
    "name": "정다은",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M107",
+   "name": "조시우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M108",
+   "name": "김소율",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M109",
+   "name": "신유준",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M110",
+   "name": "서승민",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M111",
+   "name": "황윤서",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M112",
+   "name": "강서연",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M113",
+   "name": "장도윤",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M114",
+   "name": "서서윤",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M115",
+   "name": "이연우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M116",
+   "name": "송건우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M117",
+   "name": "김선우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M118",
+   "name": "박나연",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M119",
+   "name": "이건우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M120",
+   "name": "권다인",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M121",
+   "name": "장연우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M122",
+   "name": "정연우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M123",
+   "name": "최지유",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M124",
+   "name": "윤지아",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M125",
+   "name": "권건우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M126",
+   "name": "류지유",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M127",
+   "name": "황선우",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M128",
+   "name": "윤예린",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M129",
+   "name": "류서윤",
+   "grade": 1,
+   "class": "중1 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M130",
+   "name": "김연우",
    "grade": 1,
    "class": "중1 A반",
    "parent_language": "ko",
@@ -98,6 +290,198 @@
    "parent_language_name": "한국어"
   },
   {
+   "id": "M207",
+   "name": "조시우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M208",
+   "name": "홍지우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M209",
+   "name": "황승민",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M210",
+   "name": "임예준",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M211",
+   "name": "오현우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M212",
+   "name": "김수아",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M213",
+   "name": "안주원",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M214",
+   "name": "안선우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M215",
+   "name": "최다인",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M216",
+   "name": "장지아",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M217",
+   "name": "임선우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M218",
+   "name": "오도윤",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M219",
+   "name": "강승민",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M220",
+   "name": "조가은",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M221",
+   "name": "류지아",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M222",
+   "name": "안민준",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M223",
+   "name": "서지아",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M224",
+   "name": "김건우",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M225",
+   "name": "송서윤",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M226",
+   "name": "임하준",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M227",
+   "name": "한우진",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M228",
+   "name": "한민준",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M229",
+   "name": "최우진",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M230",
+   "name": "임수아",
+   "grade": 2,
+   "class": "중2 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
    "id": "M301",
    "name": "윤서진",
    "grade": 3,
@@ -140,6 +524,198 @@
   {
    "id": "M306",
    "name": "노지훈",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M307",
+   "name": "임도윤",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M308",
+   "name": "정하준",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M309",
+   "name": "한준혁",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M310",
+   "name": "장가은",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M311",
+   "name": "오소율",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M312",
+   "name": "최지유",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M313",
+   "name": "황선우",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M314",
+   "name": "정도윤",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M315",
+   "name": "서도윤",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M316",
+   "name": "오서윤",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M317",
+   "name": "박다인",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M318",
+   "name": "홍하은",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M319",
+   "name": "강유준",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M320",
+   "name": "안연우",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M321",
+   "name": "황유준",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M322",
+   "name": "신주원",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M323",
+   "name": "윤예준",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M324",
+   "name": "권윤서",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M325",
+   "name": "이소율",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M326",
+   "name": "안수아",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M327",
+   "name": "한지유",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M328",
+   "name": "김예준",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M329",
+   "name": "윤지유",
+   "grade": 3,
+   "class": "중3 A반",
+   "parent_language": "ko",
+   "parent_language_name": "한국어"
+  },
+  {
+   "id": "M330",
+   "name": "박하준",
    "grade": 3,
    "class": "중3 A반",
    "parent_language": "ko",

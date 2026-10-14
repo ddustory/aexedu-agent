@@ -41,7 +41,8 @@ st.markdown('<span class="mode">' + {
     "claude": "🟢 실시간 AI 모드 (Claude)",
     "local": f"💻 로컬 AI 모드 ({llm.LOCAL_MODEL} · 이 노트북 안에서 실행)",
 }.get(BACKEND, "🎬 오프라인 시연 모드 (분석·검사 도구는 실제 실행, 글은 정해진 틀로 작성)") + "</span>", unsafe_allow_html=True)
-st.markdown('<div class="notice">⚠️ 화면의 학생·시험·점수는 모두 <b>가상 데이터</b>이고, 성취기준은 예시입니다. '
+st.markdown('<div class="notice">⚠️ 화면의 학생·시험·점수는 모두 <b>가상 데이터</b>입니다. 성취기준은 '
+            '<b>2022 개정 국어과 교육과정</b>의 실제 성취기준이고, 문항 분석은 <b>고전검사이론</b>을 따릅니다. '
             '보내기 전에 교사가 내용을 확인해 주세요.</div>', unsafe_allow_html=True)
 st.write("")
 
@@ -119,62 +120,120 @@ def render_notice(out):
 
 
 def render_exam(out):
-    st.markdown(f"**{out['title']}** · 응시 {out['students']}명 · 평균 **{out['average']}점** (최고 {out['max']} / 최저 {out['min']})")
+    st.markdown(f"**{out['title']}** · 응시 {out['students']}명")
+    rel = out.get("reliability", {})
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("평균", f"{out['average']}점")
+    c2.metric("표준편차", f"{out['sd']}점")
+    if rel:
+        c3.metric("신뢰도 (KR-20)", f"{rel['kr20']}", help="문항 내적 일관성. 0.8 이상 높음, 0.6 이상 보통")
+        c4.metric("측정의 표준오차", f"±{rel['sem']}점", help="이 범위 안의 점수 차이는 우연일 수 있어요")
     st.success(out["message"])
     df = pd.DataFrame(out["items"])
-    low = {x["no"] for x in out["low_items"]}
-    high = {x["no"] for x in out["high_items"]}
-    df["구분"] = df["no"].map(lambda n: "정답률 낮음" if n in low else "정답률 높음" if n in high else "보통")
-    st.markdown("**문항별 정답률**")
+    order = ["매우 어려운 문항", "어려운 문항", "중간 난이도 문항", "쉬운 문항", "매우 쉬운 문항",
+             "적절한 문항"]
+    st.markdown(f"**문항난이도 P (정답률, {out['scale']} 기준 해석)**")
     st.altair_chart(alt.Chart(df).mark_bar().encode(
-        x=alt.X("no:O", title="문항"), y=alt.Y("rate:Q", title="정답률(%)", scale=alt.Scale(domain=[0, 100])),
-        color=alt.Color("구분:N", scale=alt.Scale(domain=["정답률 낮음", "보통", "정답률 높음"],
-                                                range=["#ef4444", "#94a3b8", "#10b981"])),
-        tooltip=["no", "title", "standard", "rate"]).properties(height=260), use_container_width=True)
+        x=alt.X("no:O", title="문항"), y=alt.Y("difficulty:Q", title="난이도 P", scale=alt.Scale(domain=[0, 1])),
+        color=alt.Color("difficulty_label:N", title="해석", sort=order,
+                        scale=alt.Scale(domain=order[:5], range=["#b91c1c", "#f97316", "#94a3b8", "#22c55e", "#15803d"])),
+        tooltip=["no", "title", "standard", "difficulty", "difficulty_label"]).properties(height=240),
+        use_container_width=True)
+    st.markdown("**문항 지도: 난이도 × 변별도** (아래쪽에 있을수록 잘하는 학생과 못하는 학생을 가려내지 못하는 문항)")
+    df["점검"] = df["discrimination"].map(lambda d: "꼭 검토 (변별도 0.2 미만)" if d < 0.2 else "양호")
+    pts = alt.Chart(df).mark_circle(size=160, opacity=0.9).encode(
+        x=alt.X("difficulty:Q", title="난이도 P (오른쪽일수록 쉬움)", scale=alt.Scale(domain=[0, 1])),
+        y=alt.Y("discrimination:Q", title="변별도 (문항-총점 상관)", scale=alt.Scale(domain=[-0.3, 0.9])),
+        color=alt.Color("점검:N", scale=alt.Scale(domain=["꼭 검토 (변별도 0.2 미만)", "양호"], range=["#ef4444", "#0d9488"])),
+        tooltip=["no", "title", "difficulty", "discrimination", "discrimination_label"])
+    lbl = alt.Chart(df).mark_text(dy=-12, fontSize=11).encode(x="difficulty:Q", y="discrimination:Q", text="no:N")
+    line = alt.Chart(pd.DataFrame({"y": [0.2, 0.4]})).mark_rule(strokeDash=[4, 4], color="#94a3b8").encode(y="y:Q")
+    st.altair_chart((line + pts + lbl).properties(height=300), use_container_width=True)
+    st.caption("점선: 변별도 0.2(이 아래는 낮음), 0.4(이 위는 높음) — Ebel(1990) 기준")
+    st.markdown("**문항 품질 점검표**")
+    table = pd.DataFrame([{
+        "문항": it["no"], "성취기준": f"[{it['standard']}]", "난이도 P": it["difficulty"], "난이도 해석": it["difficulty_label"],
+        "변별도": it["discrimination"], "변별도 해석": it["discrimination_label"], "추측도": it["guessing"],
+        "교정 난이도": it["corrected_difficulty"],
+        "매력적 오답": ", ".join(map(str, it["attractive_wrong"])) or "-",
+        "기능 상실 답지": ", ".join(map(str, it["dead_options"])) or "-",
+        "점검 결과": " / ".join(it["flags"]) or "양호"} for it in out["items"]])
+    st.dataframe(table, hide_index=True, use_container_width=True)
     c1, c2 = st.columns(2)
-    c1.markdown("**🔻 정답률 낮은 문항**")
+    c1.markdown("**🔻 가장 어려운 문항**")
     for x in out["low_items"]:
-        c1.markdown(f"- **{x['no']}번** {x['rate']}% · {x['title']}  \n  <small>많이 고른 오답: {x['attractive_wrong']}번 "
-                    f"({x['attractive_wrong_count']}명)</small>", unsafe_allow_html=True)
-    c2.markdown("**🔺 정답률 높은 문항**")
+        c1.markdown(f"- **{x['no']}번** P={x['difficulty']} · {x['title']}  \n  <small>매력적 오답: "
+                    f"{', '.join(map(str, x['attractive_wrong'])) or '없음'}번</small>", unsafe_allow_html=True)
+    c2.markdown("**🔺 가장 쉬운 문항**")
     for x in out["high_items"]:
-        c2.markdown(f"- **{x['no']}번** {x['rate']}% · {x['title']}")
+        c2.markdown(f"- **{x['no']}번** P={x['difficulty']} · {x['title']}")
     sdf = pd.DataFrame(out["standards"])
-    st.markdown("**성취기준별 정답률**")
+    sdf["label"] = sdf["code"] + " " + sdf["area"]
+    st.markdown("**성취기준별 정답률** (2022 개정 국어과 교육과정)")
     st.altair_chart(alt.Chart(sdf).mark_bar(color="#0d9488").encode(
-        y=alt.Y("desc:N", sort="x", title=None), x=alt.X("rate:Q", title="정답률(%)", scale=alt.Scale(domain=[0, 100])),
-        tooltip=["area", "desc", "rate"]).properties(height=34 * len(sdf)), use_container_width=True)
+        y=alt.Y("label:N", sort="x", title=None), x=alt.X("rate:Q", title="정답률(%)", scale=alt.Scale(domain=[0, 100])),
+        tooltip=["code", "desc", "rate"]).properties(height=30 * len(sdf)), use_container_width=True)
+    with st.expander("이 분석의 기준 (고전검사이론)"):
+        st.markdown(
+            "- **문항난이도 P** = 정답자 수 / 전체 학생 수. 성태제(2015): 0.2 미만 매우 어려움 · 0.4 미만 어려움 · 0.6 미만 중간 · "
+            "0.8 미만 쉬움 · 그 이상 매우 쉬움\n"
+            "- **문항변별도** = 문항 점수와 총점의 상관(점이연 상관). Ebel(1990): 0.1 미만 없음 · 0.2 미만 매우 낮음 · 0.3 미만 낮음 · "
+            "0.4 미만 있음 · 0.4 이상 높음. 음수면 잘하는 학생이 더 틀린 문항이라 정답·문항 오류를 확인\n"
+            "- **추측도** = 틀린 학생 수 / ((답지 수 − 1) × 전체 학생 수),  **교정 난이도** = 난이도 − 추측도\n"
+            "- **오답지 매력도**: 그 오답을 고른 비율이 기대치 (1 − P) / (답지 수 − 1)보다 크면 매력적인 오답, "
+            "0명이면 기능 상실 답지 (틀린 학생이 답지 수 × 2명보다 적으면 판단 보류)\n"
+            "- **신뢰도** KR-20, **측정의 표준오차** = 표준편차 × √(1 − 신뢰도)")
 
 
 def render_student(out):
     st.markdown(f"**{out['name']} 학생 리포트**")
     st.info(out["message"])
     h = pd.DataFrame(out["history"])
-    long = pd.concat([h.assign(구분=out["name"], 점수=h["score"]), h.assign(구분="반 평균", 점수=h["class_avg"])])
-    st.markdown("**📈 월별 점수 변화 (반 평균과 비교)**")
-    st.altair_chart(alt.Chart(long).mark_line(point=True).encode(
-        x=alt.X("month:N", title=None, sort=list(h["month"])), y=alt.Y("점수:Q", scale=alt.Scale(domain=[0, 100])),
-        color=alt.Color("구분:N", scale=alt.Scale(range=["#0d9488", "#94a3b8"])),
-        tooltip=["month", "구분", "점수"]).properties(height=240), use_container_width=True)
+    last = out["history"][-1]
+    c1, c2, c3 = st.columns(3)
+    c1.metric(f"{last['month']} 점수", f"{last['score']}점", f"{out['history'][-1]['score'] - out['history'][-2]['score']:+d}점"
+              if len(out["history"]) > 1 else None)
+    c2.metric("반 안 위치 (T점수)", f"{last['t']}", help="반 평균 50, 표준편차 10으로 바꾼 점수. 시험 난이도가 달라도 비교할 수 있어요")
+    c3.metric("백분위", f"{last['percentile']}", help="반에서 이 학생보다 점수가 낮은 학생의 비율")
+    if out.get("history_read"):
+        st.caption("해석: " + out["history_read"])
+    months = list(h["month"])
+    h["low"] = h["score"] - h["sem"]
+    h["high"] = h["score"] + h["sem"]
+    band = alt.Chart(h).mark_area(opacity=0.18, color="#0d9488").encode(
+        x=alt.X("month:N", sort=months, title=None), y=alt.Y("low:Q", title="점수", scale=alt.Scale(domain=[0, 100])), y2="high:Q")
+    me = alt.Chart(h).mark_line(point=True, color="#0d9488").encode(x=alt.X("month:N", sort=months), y="score:Q",
+                                                                   tooltip=["month", "score", "sem", "rank"])
+    avg = alt.Chart(h).mark_line(strokeDash=[5, 4], color="#94a3b8").encode(x=alt.X("month:N", sort=months), y="class_avg:Q")
+    t = alt.Chart(h).mark_line(point=True, color="#7c3aed").encode(
+        x=alt.X("month:N", sort=months, title=None), y=alt.Y("t:Q", title="T점수", scale=alt.Scale(domain=[20, 80])),
+        tooltip=["month", "t", "percentile"])
+    base = alt.Chart(pd.DataFrame({"y": [50]})).mark_rule(strokeDash=[4, 4], color="#94a3b8").encode(y="y:Q")
+    c1, c2 = st.columns(2)
+    c1.markdown("**📈 원점수 (색 띠 = 측정오차 범위, 점선 = 반 평균)**")
+    c1.altair_chart((band + avg + me).properties(height=230), use_container_width=True)
+    c2.markdown("**📊 반 안 위치 T점수 (점선 = 반 평균 50)**")
+    c2.altair_chart((base + t).properties(height=230), use_container_width=True)
     p = pd.DataFrame(out["profile"])
+    p["label"] = p["code"] + " " + p["area"]
     pl = pd.concat([p.assign(구분=out["name"], 정답률=p["student_rate"]), p.assign(구분="반 평균", 정답률=p["class_rate"])])
-    st.markdown("**🎯 성취기준별 정답률 (4회 누적)**")
-    order = list(p["desc"])
+    order = list(p["label"])
+    st.markdown("**🎯 성취기준별 정답률 (4회 누적, 반 평균과 비교)**")
     rule = alt.Chart(p).mark_rule(color="#cbd5e1", strokeWidth=3).encode(
-        y=alt.Y("desc:N", title=None, sort=order), x=alt.X("class_rate:Q", title="정답률(%)", scale=alt.Scale(domain=[0, 100])),
+        y=alt.Y("label:N", title=None, sort=order), x=alt.X("class_rate:Q", title="정답률(%)", scale=alt.Scale(domain=[0, 100])),
         x2="student_rate:Q")
     dots = alt.Chart(pl).mark_circle(size=140, opacity=1).encode(
-        y=alt.Y("desc:N", title=None, sort=order), x=alt.X("정답률:Q", scale=alt.Scale(domain=[0, 100])),
+        y=alt.Y("label:N", title=None, sort=order), x=alt.X("정답률:Q", scale=alt.Scale(domain=[0, 100])),
         color=alt.Color("구분:N", scale=alt.Scale(domain=[out["name"], "반 평균"], range=["#0d9488", "#94a3b8"])),
         tooltip=["desc", "구분", "정답률"])
     st.altair_chart((rule + dots).properties(height=32 * len(p)), use_container_width=True)
     st.caption("위에 있을수록 반 평균보다 약한 성취기준이에요.")
-    st.markdown("**🧩 이번 시험 오답 묶음 (성취기준별 + 지난달 유사 문항)**")
+    st.markdown("**🧩 이번 시험 오답 묶음 (성취기준별 + 지난 시험 유사 문항)**")
     cls = {"반복 약점": "rep", "처음 나온 유형": "new", "이번에만 틀림": "once"}
     for g in out["wrong_groups"]:
         nos = ", ".join(f"{w['no']}번" for w in g["wrong_items"])
-        with st.expander(f"{g['desc']} · {nos} · 지난 유사 문항 {g['past_correct']} 맞힘"):
-            st.markdown(f"<span class='tag {cls[g['pattern']]}'>{g['pattern']}</span> {g['area']}",
+        with st.expander(f"{g['code']} {g['area']} · {nos} · 지난 유사 문항 {g['past_correct']} 맞힘"):
+            st.markdown(f"<span class='tag {cls[g['pattern']]}'>{g['pattern']}</span> {esc(g['desc'])}",
                         unsafe_allow_html=True)
             for w in g["wrong_items"]:
                 st.markdown(f"- 이번 {w['no']}번: {w['title']} (고른 답 {w['picked']}번 / 정답 {w['answer']}번)")
@@ -219,8 +278,9 @@ with tab1:
                  next_plan=nxt, translate=bool(tr and BACKEND))
 
 with tab2:
-    st.markdown("월말 국어 학력평가를 분석합니다. **정답률이 높은/낮은 문항**과 **성취기준별 정답률**을 찾고, "
-                "학생별로 **지난 성적과 연결**해 그래프로 보여주며, 틀린 문제를 **성취기준별로 묶어 지난달 유사 문항**과 함께 정리합니다.")
+    st.markdown("월말 국어 학력평가를 **고전검사이론**으로 분석합니다. 문항마다 **난이도·변별도·추측도·오답지 매력도**를 따져 "
+                "검토할 문항을 찾고, 시험의 **신뢰도와 측정오차**를 계산합니다. 학생별로는 달마다 다른 시험 난이도를 고려해 "
+                "**원점수와 반 안 위치(T점수)**로 성적 변화를 해석하고, 틀린 문제를 **성취기준별로 묶어 지난 시험 유사 문항**과 함께 정리합니다.")
     c1, c2 = st.columns(2)
     g2 = c1.selectbox("학년", [1, 2, 3], index=1, format_func=lambda x: f"중{x}", key="egrade")
     ex = T.exams(g2)

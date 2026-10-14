@@ -26,7 +26,7 @@ def run(scenario: str, state: AgentState, **kwargs):
     goal_fn, script_fn = SCENARIOS[scenario]
     if scenario == "lesson":
         goal = goal_fn(kwargs["student_id"], kwargs["passage_text"], kwargs.get("passage_id"))
-        script_args = (kwargs["student_id"], kwargs["passage_text"])
+        script_args = (kwargs["student_id"], kwargs["passage_text"], kwargs.get("passage_id"))
     elif scenario in ("question", "teacher"):
         text = kwargs["text"]
         goal = goal_fn(kwargs["student_id"], text)

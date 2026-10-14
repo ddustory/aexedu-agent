@@ -1,65 +1,77 @@
 {
- "_note": "시연용 가상 데이터입니다. 실제 학생·시험이 아닙니다. 성취기준은 예시이며 교사가 실제 코드로 바꿔 쓸 수 있습니다.",
+ "_note": "시연용 가상 데이터입니다. 실제 학생·시험이 아닙니다. 성취기준 코드와 문장은 2022 개정 국어과 교육과정(교육부 고시 제2022-33호)의 실제 중학교 성취기준이며, 문항은 그 성취기준을 평가하는 가상 문항입니다.",
  "standards": [
   {
-   "id": "듣말-토론근거",
-   "area": "듣기·말하기",
-   "desc": "토론에서 주장과 근거가 알맞은지 판단하기"
+   "id": "9국05-01",
+   "code": "[9국05-01]",
+   "area": "문학",
+   "desc": "운율, 비유, 상징의 특성과 효과에 유의하며 작품을 감상하고 창작한다."
   },
   {
-   "id": "듣말-발표구성",
-   "area": "듣기·말하기",
-   "desc": "듣는 이를 고려해 발표 내용을 구성하기"
+   "id": "9국05-02",
+   "code": "[9국05-02]",
+   "area": "문학",
+   "desc": "갈등의 진행과 해결 과정을 파악하며 작품을 감상한다."
   },
   {
-   "id": "읽기-요약",
+   "id": "9국05-04",
+   "code": "[9국05-04]",
+   "area": "문학",
+   "desc": "보는 이나 말하는 이의 특성과 효과를 파악하며 작품을 감상한다."
+  },
+  {
+   "id": "9국02-02",
+   "code": "[9국02-02]",
    "area": "읽기",
-   "desc": "글의 중심 내용을 찾아 요약하기"
+   "desc": "읽기 목적과 글의 구조를 고려하며 글을 효과적으로 요약한다."
   },
   {
-   "id": "읽기-설명방법",
+   "id": "9국02-05",
+   "code": "[9국02-05]",
    "area": "읽기",
-   "desc": "설명 방법(정의·예시·비교 등)을 파악하기"
+   "desc": "글에 사용된 다양한 설명 방법과 논증 방법을 파악하고, 그 타당성을 평가하며 읽는다."
   },
   {
-   "id": "읽기-논증평가",
+   "id": "9국02-03",
+   "code": "[9국02-03]",
    "area": "읽기",
-   "desc": "주장과 근거의 타당성을 평가하며 읽기"
+   "desc": "독자의 배경지식과 글에 나타난 정보 등을 활용하여 글에 드러나지 않은 의도나 관점을 추론하며 읽는다."
   },
   {
-   "id": "쓰기-고쳐쓰기",
+   "id": "9국04-03",
+   "code": "[9국04-03]",
+   "area": "문법",
+   "desc": "품사의 종류와 특성을 이해하고 국어 자료를 분석한다."
+  },
+  {
+   "id": "9국04-04",
+   "code": "[9국04-04]",
+   "area": "문법",
+   "desc": "문장의 짜임을 이해하고 표현 효과를 고려하여 문장을 구성한다."
+  },
+  {
+   "id": "9국04-01",
+   "code": "[9국04-01]",
+   "area": "문법",
+   "desc": "국어의 음운 체계와 문자 체계를 이해하고 국어생활에 활용한다."
+  },
+  {
+   "id": "9국03-08",
+   "code": "[9국03-08]",
    "area": "쓰기",
-   "desc": "통일성을 고려해 글을 고쳐 쓰기"
+   "desc": "쓰기 과정과 전략을 점검·조정하며 글을 쓰고, 독자를 고려하여 글을 고쳐 쓴다."
   },
   {
-   "id": "문법-품사",
-   "area": "문법",
-   "desc": "낱말을 품사에 따라 분류하기"
+   "id": "9국01-08",
+   "code": "[9국01-08]",
+   "area": "듣기·말하기",
+   "desc": "토론에서 반론을 고려하여 타당한 논증을 구성하고 논리적으로 반박한다."
   },
   {
-   "id": "문법-문장성분",
-   "area": "문법",
-   "desc": "문장 성분을 파악하기"
-  },
-  {
-   "id": "문법-음운변동",
-   "area": "문법",
-   "desc": "음운의 변동을 이해하기"
-  },
-  {
-   "id": "문학-비유상징",
-   "area": "문학",
-   "desc": "비유와 상징 표현의 효과 이해하기"
-  },
-  {
-   "id": "문학-갈등구성",
-   "area": "문학",
-   "desc": "소설의 갈등과 구성 단계 파악하기"
-  },
-  {
-   "id": "문학-관점",
-   "area": "문학",
-   "desc": "말하는 이·서술자의 관점 파악하기"
+   "id": "9국01-06",
+   "code": "[9국01-06]",
+   "area": "듣기·말하기",
+   "desc": "다양한 자료를 재구성하여 내용을 체계적으로 조직하고 청중이 이해하기 쉽게 발표한다."
   }
  ],
  "exams": [
@@ -71,143 +83,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "no": 5,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
+     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     }
    ]
   },
@@ -219,143 +251,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "no": 4,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "no": 5,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     }
    ]
   },
@@ -367,143 +419,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
      "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "no": 12,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 13,
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 14,
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 15,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 16,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 17,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
      "answer": 4
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 20,
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
     }
    ]
   },
@@ -515,143 +587,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "no": 5,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
-     "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
+    },
+    {
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 9,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 10,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 11,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "no": 16,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "no": 17,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     }
    ]
   },
@@ -663,143 +755,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "no": 2,
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 3,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
-     "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 9,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 10,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 3
     }
    ]
   },
@@ -811,143 +923,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 9,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 10,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 11,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
+     "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
-     "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
-     "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "no": 14,
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 15,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 16,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 17,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
      "answer": 5
+    },
+    {
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 20,
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
     }
    ]
   },
@@ -959,143 +1091,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "no": 17,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 4
     }
    ]
   },
@@ -1107,143 +1259,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "no": 3,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 4,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 5,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
+     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
-     "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "no": 12,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "no": 13,
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 14,
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 20,
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
     }
    ]
   },
@@ -1255,143 +1427,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "no": 3,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     },
     {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "no": 4,
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 5,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
+     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
-     "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "no": 15,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 16,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     }
    ]
   },
@@ -1403,143 +1595,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
-     "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
-     "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
-     "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "no": 12,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 13,
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 14,
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 15,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 16,
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
+     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "no": 17,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 18,
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
+     "points": 5,
+     "choices": 5,
      "answer": 2
+    },
+    {
+     "no": 19,
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
+    },
+    {
+     "no": 20,
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
     }
    ]
   },
@@ -1551,143 +1763,163 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 5
-    },
-    {
-     "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
-     "points": 5,
-     "answer": 1
-    },
-    {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
-     "answer": 3
-    },
-    {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
-     "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "no": 6,
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 5
+    },
+    {
+     "no": 9,
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
+     "points": 5,
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
      "points": 5,
+     "choices": 5,
      "answer": 4
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
      "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 1
     }
    ]
   },
@@ -1699,142 +1931,162 @@
    "items": [
     {
      "no": 1,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 2,
-     "standard": "문학-비유상징",
-     "title": "시에 쓰인 표현 방법과 효과 고르기",
+     "standard": "9국05-01",
+     "title": "시의 운율·비유·상징과 그 효과 고르기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 3,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 5
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 4,
-     "standard": "문학-갈등구성",
-     "title": "소설의 갈등 양상으로 알맞은 것 고르기",
+     "standard": "9국05-02",
+     "title": "소설의 갈등이 진행·해결되는 과정 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 5,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 2
     },
     {
      "no": 6,
-     "standard": "문학-관점",
-     "title": "서술자의 시점과 효과 고르기",
+     "standard": "9국05-04",
+     "title": "보는 이·말하는 이(서술자)의 특성과 효과 파악하기",
      "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 7,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 1
     },
     {
-     "no": 8,
-     "standard": "읽기-요약",
-     "title": "글의 중심 내용으로 알맞은 것 고르기",
+     "no": 7,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
+    },
+    {
+     "no": 8,
+     "standard": "9국02-02",
+     "title": "글의 구조를 고려한 요약으로 알맞은 것 고르기",
+     "points": 5,
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 9,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 3
     },
     {
      "no": 10,
-     "standard": "읽기-설명방법",
-     "title": "밑줄 친 부분에 쓰인 설명 방법 고르기",
+     "standard": "9국02-05",
+     "title": "글에 쓰인 설명·논증 방법과 그 타당성 판단하기",
      "points": 5,
-     "answer": 2
-    },
-    {
-     "no": 11,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
-     "points": 5,
-     "answer": 4
-    },
-    {
-     "no": 12,
-     "standard": "읽기-논증평가",
-     "title": "글쓴이 주장의 근거로 알맞지 않은 것 고르기",
-     "points": 5,
+     "choices": 5,
      "answer": 5
     },
     {
-     "no": 13,
-     "standard": "문법-품사",
-     "title": "품사가 다른 하나 고르기",
+     "no": 11,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
      "points": 5,
+     "choices": 5,
+     "answer": 3
+    },
+    {
+     "no": 12,
+     "standard": "9국02-03",
+     "title": "글에 드러나지 않은 글쓴이의 의도 추론하기",
+     "points": 5,
+     "choices": 5,
      "answer": 2
     },
     {
-     "no": 14,
-     "standard": "문법-문장성분",
-     "title": "밑줄 친 말의 문장 성분 고르기",
+     "no": 13,
+     "standard": "9국04-03",
+     "title": "품사의 종류와 특성이 다른 하나 고르기",
      "points": 5,
+     "choices": 5,
+     "answer": 4
+    },
+    {
+     "no": 14,
+     "standard": "9국04-04",
+     "title": "문장의 짜임(홑문장·겹문장) 분석하기",
+     "points": 5,
+     "choices": 5,
      "answer": 3
     },
     {
      "no": 15,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 4
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 16,
-     "standard": "문법-음운변동",
-     "title": "음운 변동이 일어나는 단어 고르기",
+     "standard": "9국04-01",
+     "title": "음운 체계·음운의 변동 이해하기",
      "points": 5,
-     "answer": 1
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 17,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 4
     },
     {
      "no": 18,
-     "standard": "쓰기-고쳐쓰기",
-     "title": "통일성을 해치는 문장 찾기",
+     "standard": "9국03-08",
+     "title": "독자를 고려해 초고를 고쳐 쓴 방법 고르기",
      "points": 5,
-     "answer": 3
+     "choices": 5,
+     "answer": 1
     },
     {
      "no": 19,
-     "standard": "듣말-토론근거",
-     "title": "토론 대화에서 근거가 부족한 발언 고르기",
+     "standard": "9국01-08",
+     "title": "토론에서 상대 논증의 허점을 지적한 반박 고르기",
      "points": 5,
-     "answer": 2
+     "choices": 5,
+     "answer": 5
     },
     {
      "no": 20,
-     "standard": "듣말-발표구성",
-     "title": "발표 계획에서 빠진 내용 고르기",
+     "standard": "9국01-06",
+     "title": "청중을 고려해 발표 자료를 재구성한 방법 고르기",
      "points": 5,
+     "choices": 5,
      "answer": 2
     }
    ]

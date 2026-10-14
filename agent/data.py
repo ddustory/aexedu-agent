@@ -82,3 +82,11 @@ def topic(word: str) -> str:
     if "\uac00" <= c <= "\ud7a3":
         return word + ("은" if (ord(c) - 0xAC00) % 28 else "는")
     return word + "는"
+
+
+def curriculum() -> dict:
+    return {x["code"].strip("[]"): x for x in _load("curriculum_standards.json")["standards"]}
+
+
+def guidance() -> list[dict]:
+    return _load("curriculum_guidance.json")["guidance"]

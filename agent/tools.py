@@ -34,6 +34,7 @@ class AgentState:
     last_peer: dict = field(default_factory=dict)      # 학생ID → 마지막 또래 연결 결과
     pocket: dict = field(default_factory=dict)         # 학생ID → 낱말 주머니 기록 (반응으로 바뀐 낱말)
     last_coverage: dict = field(default_factory=dict)  # 학생ID → 마지막 '아는 낱말 비율' 검사 결과
+    curriculum: dict = field(default_factory=dict)     # 지문ID → 교육과정 연결 (성취기준·지도 지침)
 
 
 class ToolError(Exception):
@@ -307,6 +308,7 @@ def present_lesson_material(state: AgentState, student_id: str, level: int, kore
         "korean_text": korean_text, "native_text": native_text,
         "vocab_cards": vocab_cards, "teacher_note": teacher_note,
         "coverage": _coverage_for(state, student_id, korean_text),
+        "curriculum": next(iter(state.curriculum.values()), None),
     })
     return {"shown": True, "_summary": f"학습 자료를 화면에 표시함 ({level}단계)"}
 
@@ -588,7 +590,8 @@ def find_peer_group(state: AgentState, student_id: str, mode: str, reason: str =
         members.append({"name": p["display_name"], "region": p["region"], "center": p["center"],
                         "language": p["home_language_name"], "level": p["level"], "grade": p["grade"],
                         "interests": p.get("interests", []), "why": " · ".join(why)})
-    talk = ("서로 모국어가 달라서, 모둠 안의 공통 언어는 한국어가 됩니다. 자연스럽게 한국어로 말할 기회가 늘어나요."
+    talk = ("서로 모국어가 달라서, 모둠 안의 공통 언어는 한국어가 됩니다. 자연스럽게 한국어로 말할 기회가 늘어나요. "
+            "각자 자기 나라의 비·날씨 이야기를 한국어로 소개하는 활동으로 상호 문화적 이해도 함께 키워요."
             if mode == "mixed_language" else
             "같은 모국어 친구와 어려운 개념을 모국어로 먼저 이해하고, 한국어 표현으로 함께 정리해요.")
     result = {
@@ -607,6 +610,21 @@ def present_peer_group(state: AgentState, student_id: str, message: str, reason:
         raise ToolError("먼저 find_peer_group 으로 모둠을 만들어야 합니다.")
     state.outputs.append({"kind": "peers", "student_id": student_id, "message": message, **p})
     return {"shown": True, "_summary": f"또래 모둠 {len(p['members']) + 1}명을 화면에 표시함"}
+
+
+# ── 13. 교육과정 연결 (2022 개정 국어과 교육과정) ───────────────
+
+def get_curriculum_link(state: AgentState, passage_id: str, reason: str = "") -> dict:
+    p = data.passage(passage_id)
+    if not p:
+        raise ToolError(f"지문 {passage_id} 를 찾을 수 없습니다.")
+    cur = data.curriculum()
+    stds = [{"code": f"[{c}]", "area": cur[c]["area"], "text": cur[c]["text"]} for c in p.get("related_standards", [])]
+    guide = data.guidance()
+    link = {"standards": stds, "note": p.get("standard_note", ""), "guidance": guide}
+    state.curriculum[passage_id] = link
+    return {**link, "_summary": "연결 성취기준: " + ", ".join(x["code"] for x in stds)
+                                + f" · 다문화 배경 학습자 지도 지침 {len(guide)}개 (개별화 맞춤형 · 수준별·협력 수업 · 상호 문화 이해)"}
 
 
 # ── 12. 학생별 낱말 주머니: 재고 → 고치고 → 다시 재기 ─────────────
@@ -746,6 +764,10 @@ TOOL_SCHEMAS = [
                     "학생 질문에 답할 때 가장 먼저 쓰고, 그 결과를 translate_text 로 모국어로 옮긴다.",
      "input_schema": _schema({"student_id": {"type": "string"}, "question": {"type": "string"}},
                              ["student_id", "question"])},
+    {"name": "get_curriculum_link",
+     "description": "지문과 연결된 2022 개정 국어과 교육과정 성취기준과, 교육과정의 다문화 배경 학습자 지도 지침을 가져온다. "
+                    "수업 자료를 만들 때 처음에 써서 자료가 어떤 성취기준을 위한 개별화 맞춤형 자료인지 밝힌다.",
+     "input_schema": _schema({"passage_id": {"type": "string"}}, ["passage_id"])},
     {"name": "get_word_pocket",
      "description": "학생의 '낱말 주머니'(아는 낱말 수, 배우는 중인 낱말, 학생이 '몰라요'라고 한 낱말)와 교사가 정한 기준을 본다. "
                     "학생용 글을 쓰기 전에 먼저 쓴다.",
@@ -851,6 +873,7 @@ TOOL_FUNCS = {
     "present_support_plan": present_support_plan,
     "answer_student_question": answer_student_question,
     "get_word_pocket": get_word_pocket,
+    "get_curriculum_link": get_curriculum_link,
     "check_coverage": check_coverage,
     "adapt_to_pocket": adapt_to_pocket,
     "record_word_feedback": record_word_feedback,
@@ -876,6 +899,7 @@ TOOL_LABELS = {
     "present_support_plan": "📋 지원 계획 보여주기",
     "answer_student_question": "💡 쉬운 한국어로 답 쓰기",
     "get_word_pocket": "🧺 낱말 주머니 보기",
+    "get_curriculum_link": "📚 교육과정 연결",
     "check_coverage": "📏 아는 낱말 비율 재기",
     "adapt_to_pocket": "🛠️ 학생이 아는 낱말로 고쳐 쓰기",
     "record_word_feedback": "📝 학생 반응 기록",

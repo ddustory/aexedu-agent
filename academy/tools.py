@@ -16,6 +16,8 @@ from statistics import mean
 from agent import llm
 from agent.config import DATA_DIR
 
+from . import ctt
+
 ACADEMY_DIR = DATA_DIR / "academy"
 
 
@@ -98,6 +100,39 @@ def _bullets(text: str) -> list[str]:
     return [ln for ln in lines if ln]
 
 
+# 진도에 자주 쓰는 말 → 2022 개정 국어과 교육과정 중학교 성취기준
+STANDARD_KEYWORDS = [
+    (r"갈등", "9국05-02"), (r"시점|서술자|보는 이|말하는 이|화자", "9국05-04"), (r"비유|상징|운율", "9국05-01"),
+    (r"성장", "9국05-03"), (r"사회[·⋅ ]?문화적|시대 ?배경", "9국05-05"), (r"품사", "9국04-03"),
+    (r"문장 ?성분|문장의 짜임|홑문장|겹문장", "9국04-04"), (r"음운", "9국04-01"), (r"단어의 짜임|새말|합성어|파생어", "9국04-02"),
+    (r"피동|인용 표현", "9국04-05"), (r"맞춤법", "9국04-06"), (r"요약", "9국02-02"), (r"설명 방법|논증", "9국02-05"),
+    (r"추론", "9국02-03"), (r"토론", "9국01-08"), (r"토의", "9국01-07"), (r"발표", "9국01-06"), (r"면담", "9국01-05"),
+    (r"주장하는 글", "9국03-03"), (r"고쳐 ?쓰", "9국03-08"), (r"광고|홍보", "9국06-05"), (r"매체", "9국06-02"),
+]
+
+
+@lru_cache(maxsize=1)
+def curriculum() -> dict:
+    cur = json.loads((DATA_DIR / "curriculum_standards.json").read_text(encoding="utf-8"))
+    return {x["code"].strip("[]"): x for x in cur["standards"]}
+
+
+def match_standards(state: AcademyState, text: str, reason: str = "") -> dict:
+    found = []
+    for pat, code in STANDARD_KEYWORDS:
+        if re.search(pat, text or "") and code not in found:
+            found.append(code)
+    if not found and llm.online():
+        menu = "\n".join(f"{k} {v['text']}" for k, v in curriculum().items() if k.startswith("9국"))
+        out = llm.complete_text("수업 진도에 해당하는 중학교 국어 성취기준 코드만 쉼표로 답합니다(최대 3개, 없으면 '없음').",
+                                f"[진도]\n{text}\n\n[성취기준 목록]\n{menu}")
+        found = [c for c in re.findall(r"9국0\d-\d\d", out) if c in curriculum()][:3]
+    items = [{"code": f"[{c}]", "area": curriculum()[c]["area"], "text": curriculum()[c]["text"]} for c in found]
+    state.notices["_standards"] = items
+    return {"standards": items,
+            "_summary": ("연결된 성취기준: " + ", ".join(x["code"] for x in items)) if items else "연결할 성취기준을 찾지 못함"}
+
+
 NOTICE_SYSTEM = {
     "parent": """당신은 학원 국어 교사입니다. 학부모에게 보낼 알림장을 씁니다.
 - 정중한 '-습니다/-ㅂ니다'체. 반말 금지. 400자 안팎.
@@ -116,14 +151,20 @@ def draft_notice(state: AcademyState, audience: str, class_name: str, today_prog
     if audience not in NOTICE_SYSTEM:
         raise ToolError("audience 는 'parent' 또는 'student' 여야 합니다.")
     if llm.online():
+        stds = state.notices.get("_standards", [])
         prompt = (f"반: {class_name}\n[오늘 수업 진도]\n{today_progress}\n[숙제]\n{homework}\n"
-                  f"[앞으로의 진도 계획]\n{next_plan}")
+                  f"[앞으로의 진도 계획]\n{next_plan}"
+                  + (("\n[연결된 성취기준 — 학부모용이면 '■ 이번 수업과 연결된 성취기준' 칸에 그대로 적기]\n"
+                      + "\n".join(f"{x['code']} {x['text']}" for x in stds)) if stds and audience == "parent" else ""))
         text = llm.complete_text(NOTICE_SYSTEM[audience], prompt)
     else:
         t, h, n = _bullets(today_progress), _bullets(homework), _bullets(next_plan)
+        stds = state.notices.get("_standards", [])
         if audience == "parent":
             text = (f"안녕하십니까, {class_name} 국어 담당 교사입니다. 오늘 수업 내용을 알려 드립니다.\n\n"
                     "■ 오늘 수업 진도\n" + "\n".join(f"- {x}" for x in t) + "\n\n"
+                    + (("■ 이번 수업과 연결된 성취기준 (2022 개정 국어과 교육과정)\n"
+                        + "\n".join(f"- {x['code']} {x['text']}" for x in stds) + "\n\n") if stds else "") +
                     "■ 숙제\n" + "\n".join(f"- {x}" for x in h) + "\n\n"
                     "■ 앞으로의 진도 계획\n" + "\n".join(f"- {x}" for x in n) + "\n\n"
                     "가정에서 숙제를 마쳤는지 한 번 확인해 주시면 큰 도움이 됩니다. 궁금하신 점은 언제든 연락 주십시오.\n"
@@ -164,7 +205,7 @@ def check_notice(state: AcademyState, audience: str, reason: str = "") -> dict:
             problems.append(f"'{label}' 내용이 빠졌거나 너무 바뀌었습니다")
     if audience == "parent" and _BANMAL.search(text):
         problems.append("학부모용인데 반말 표현이 있습니다")
-    limit = 700 if audience == "parent" else 450
+    limit = 900 if audience == "parent" else 450
     if len(text) > limit:
         problems.append(f"너무 깁니다 ({len(text)}자, 기준 {limit}자 이하)")
     if _PHONE.search(text) or _RRN.search(text):
@@ -204,36 +245,79 @@ def list_exams(state: AcademyState, grade: int, reason: str = "") -> dict:
             "_summary": f"중{grade} 학력평가 {len(ex)}회: " + ", ".join(_month(e) for e in ex)}
 
 
+@lru_cache(maxsize=None)
+def _ctt(exam_id: str) -> dict:
+    e = exam(exam_id)
+    return ctt.analyze(e["items"], answers(exam_id))
+
+
+def std_short(k: str) -> str:
+    """성취기준의 쉬운 이름 (문항 제목에서): 학부모·학생용 글에 쓴다."""
+    for e in exams():
+        for it in e["items"]:
+            if it["standard"] == k:
+                return it["title"]
+    return standards()[k]["desc"]
+
+
+def _std_label(k: str, n: int = 26) -> str:
+    d = standards()[k]["desc"]
+    return f"[{k}] " + (d if len(d) <= n else d[:n] + "…")
+
+
 def analyze_exam(state: AcademyState, exam_id: str, reason: str = "") -> dict:
     e = exam(exam_id)
-    ans = answers(exam_id)
-    n = len(ans)
-    scores = {sid: _score(e, a) for sid, a in ans.items()}
-    items = []
-    for i, it in enumerate(e["items"]):
-        picks = [a[i] for a in ans.values()]
-        rate = round(sum(p == it["answer"] for p in picks) / n * 100)
-        wrong = Counter(p for p in picks if p != it["answer"]).most_common(1)
-        items.append({"no": it["no"], "standard": it["standard"], "title": it["title"], "rate": rate,
-                      "attractive_wrong": wrong[0][0] if wrong else None,
-                      "attractive_wrong_count": wrong[0][1] if wrong else 0})
+    c = _ctt(exam_id)
+    items = [{**it, "rate": round(it["difficulty"] * 100)} for it in c["items"]]
     by_std = defaultdict(list)
     for it in items:
-        by_std[it["standard"]].append(it["rate"])
-    std_rates = sorted(({"standard": k, "area": standards()[k]["area"], "desc": standards()[k]["desc"],
-                         "rate": round(mean(v))} for k, v in by_std.items()), key=lambda x: x["rate"])
-    ranked = sorted(items, key=lambda x: x["rate"])
+        by_std[it["standard"]].append(it["difficulty"])
+    std_rates = sorted(({"standard": k, "code": f"[{k}]", "area": standards()[k]["area"], "desc": standards()[k]["desc"],
+                         "rate": round(mean(v) * 100)} for k, v in by_std.items()), key=lambda x: x["rate"])
+    ranked = sorted(items, key=lambda x: x["difficulty"])
+    scores = list(c["totals"].values())
+    labels = Counter(it["difficulty_label"] for it in items)
     res = {
-        "exam_id": exam_id, "title": e["title"], "students": n, "average": round(mean(scores.values()), 1),
-        "max": max(scores.values()), "min": min(scores.values()),
+        "exam_id": exam_id, "title": e["title"], "students": c["n"], "average": c["mean"], "sd": c["sd"],
+        "max": max(scores), "min": min(scores), "scale": c["scale"], "difficulty_mix": dict(labels),
         "items": items, "low_items": ranked[:3], "high_items": ranked[::-1][:3], "standards": std_rates,
     }
     state.last_exam[exam_id] = res
-    low = ", ".join(f"{x['no']}번({x['rate']}%)" for x in res["low_items"])
-    high = ", ".join(f"{x['no']}번({x['rate']}%)" for x in res["high_items"])
+    low = ", ".join(f"{x['no']}번(P={x['difficulty']})" for x in res["low_items"])
+    high = ", ".join(f"{x['no']}번(P={x['difficulty']})" for x in res["high_items"])
+    mix = " · ".join(f"{k} {v}" for k, v in labels.items())
     return {**{k: v for k, v in res.items() if k != "items"},
-            "_summary": f"평균 {res['average']}점 · 정답률 낮은 문항 {low} · 높은 문항 {high} · "
-                        f"가장 약한 성취기준: {std_rates[0]['desc']}({std_rates[0]['rate']}%)"}
+            "_summary": f"평균 {res['average']}점 · 난이도 분포({c['scale']} 기준): {mix} · 어려운 문항 {low} · 쉬운 문항 {high} · "
+                        f"가장 약한 성취기준 {_std_label(std_rates[0]['standard'])}({std_rates[0]['rate']}%)"}
+
+
+def check_item_quality(state: AcademyState, exam_id: str, reason: str = "") -> dict:
+    r = state.last_exam.get(exam_id)
+    if not r:
+        raise ToolError("먼저 analyze_exam 으로 분석해야 합니다.")
+    flagged = [it for it in r["items"] if it["flags"]]
+    low_disc = [it["no"] for it in r["items"] if it["discrimination"] < 0.2]
+    dead = [it["no"] for it in r["items"] if it["dead_options"]]
+    misc = [it["no"] for it in r["items"] if any("오개념" in f for f in it["flags"])]
+    r["quality"] = {"flagged": [{"no": it["no"], "flags": it["flags"]} for it in flagged],
+                    "low_discrimination": low_disc, "dead_options": dead, "misconception": misc}
+    neg = [it["no"] for it in r["items"] if it["discrimination"] < 0]
+    return {**r["quality"], "negative_discrimination": neg,
+            "_summary": f"꼭 검토할 문항(변별도 0.2 미만): {low_disc or '없음'}"
+                        + (f" — 그중 {neg}번은 변별도 음수라 정답·문항 오류 확인 필요" if neg else "")
+                        + f" · 오개념 재지도 문항(어렵고 매력적 오답 있음): {misc or '없음'}"
+                        + f" · 답지를 손볼 문항(기능 상실 답지) {len(dead)}개"}
+
+
+def test_reliability(state: AcademyState, exam_id: str, reason: str = "") -> dict:
+    r = state.last_exam.get(exam_id)
+    if not r:
+        raise ToolError("먼저 analyze_exam 으로 분석해야 합니다.")
+    c = _ctt(exam_id)
+    r["reliability"] = {"kr20": c["reliability"], "label": c["reliability_label"], "sem": c["sem"], "sd": c["sd"]}
+    return {**r["reliability"],
+            "_summary": f"신뢰도(KR-20) {c['reliability']} ({c['reliability_label']}) · 측정의 표준오차 ±{c['sem']}점 → "
+                        f"학생 점수를 볼 때 ±{c['sem']}점 안의 차이는 우연일 수 있음"}
 
 
 def student_history(state: AcademyState, student_id: str, reason: str = "") -> dict:
@@ -243,18 +327,28 @@ def student_history(state: AcademyState, student_id: str, reason: str = "") -> d
         ans = answers(e["id"])
         if student_id not in ans:
             continue
-        all_scores = sorted((_score(e, a) for a in ans.values()), reverse=True)
-        mine = _score(e, ans[student_id])
-        rows.append({"exam_id": e["id"], "month": _month(e), "score": mine,
-                     "class_avg": round(mean(all_scores), 1), "rank": all_scores.index(mine) + 1, "of": len(all_scores)})
+        c = _ctt(e["id"])
+        all_scores = sorted(c["totals"].values(), reverse=True)
+        mine = c["totals"][student_id]
+        pos = ctt.standing(mine, all_scores)
+        rows.append({"exam_id": e["id"], "month": _month(e), "score": mine, "class_avg": c["mean"],
+                     "rank": all_scores.index(mine) + 1, "of": len(all_scores), "t": pos["t"],
+                     "percentile": pos["percentile"], "sem": c["sem"]})
     if not rows:
         raise ToolError("이 학생의 시험 기록이 없습니다.")
     delta = rows[-1]["score"] - rows[-2]["score"] if len(rows) > 1 else 0
-    trend = rows[-1]["score"] - rows[0]["score"]
+    t_delta = round(rows[-1]["t"] - rows[-2]["t"], 1) if len(rows) > 1 else 0
+    sem = rows[-1]["sem"]
+    if len(rows) > 1 and abs(delta) <= sem:
+        read = f"원점수 변화({delta:+d}점)가 측정의 표준오차(±{sem}점) 안이라 실력 변화로 보기 어려움"
+    elif len(rows) > 1 and (delta < 0) != (t_delta < 0) and abs(t_delta) >= 1:
+        read = f"원점수는 {delta:+d}점이지만 반 안 위치(T점수)는 {t_delta:+.1f} → 시험 난이도의 영향이 큼"
+    else:
+        read = f"원점수 {delta:+d}점, 반 안 위치(T점수) {t_delta:+.1f} → 실제 변화로 볼 만함"
     state.last_student.setdefault(student_id, {})["history"] = rows
-    return {"student": s["name"], "history": rows, "last_change": delta, "overall_change": trend,
-            "_summary": " → ".join(f"{r['month']} {r['score']}점" for r in rows)
-                        + f" · 지난달 대비 {delta:+d}점 · 첫 시험 대비 {trend:+d}점"}
+    state.last_student[student_id]["history_read"] = read
+    return {"student": s["name"], "history": rows, "last_change": delta, "t_change": t_delta, "reading": read,
+            "_summary": " → ".join(f"{r['month']} {r['score']}점(T{r['t']:.0f})" for r in rows) + f" · {read}"}
 
 
 def standard_profile(state: AcademyState, student_id: str, reason: str = "") -> dict:
@@ -273,15 +367,15 @@ def standard_profile(state: AcademyState, student_id: str, reason: str = "") -> 
     prof = []
     for k, (c, t) in mine.items():
         cc, ct = cls[k]
-        prof.append({"standard": k, "area": standards()[k]["area"], "desc": standards()[k]["desc"],
+        prof.append({"standard": k, "code": f"[{k}]", "area": standards()[k]["area"], "desc": standards()[k]["desc"],
                      "student_rate": round(c / t * 100), "class_rate": round(cc / ct * 100),
                      "gap": round(c / t * 100 - cc / ct * 100), "solved": f"{c}/{t}"})
     prof.sort(key=lambda x: x["gap"])
     state.last_student.setdefault(student_id, {})["profile"] = prof
     weak, strong = prof[:3], prof[::-1][:2]
     return {"profile": prof, "weakest": weak, "strongest": strong,
-            "_summary": "약한 성취기준: " + ", ".join(f"{w['desc']}(반 평균보다 {w['gap']}%p)" for w in weak)
-                        + " · 강한 성취기준: " + ", ".join(f"{x['desc']}({x['gap']:+d}%p)" for x in strong)}
+            "_summary": "약한 성취기준: " + ", ".join(f"{_std_label(w['standard'], 14)}({w['gap']:+d}%p)" for w in weak)
+                        + " · 강한 성취기준: " + ", ".join(f"{_std_label(x['standard'], 14)}({x['gap']:+d}%p)" for x in strong)}
 
 
 def group_wrong_answers(state: AcademyState, student_id: str, exam_id: str, reason: str = "") -> dict:
@@ -309,14 +403,14 @@ def group_wrong_answers(state: AcademyState, student_id: str, exam_id: str, reas
         hit = sum(x["correct"] for x in similar)
         pattern = ("반복 약점" if similar and hit / len(similar) < 0.5 else
                    "이번에만 틀림" if similar else "처음 나온 유형")
-        groups.append({"standard": std, "area": standards()[std]["area"], "desc": standards()[std]["desc"],
+        groups.append({"standard": std, "code": f"[{std}]", "area": standards()[std]["area"], "desc": standards()[std]["desc"],
                        "wrong_items": its, "similar_items": similar,
                        "past_correct": f"{hit}/{len(similar)}", "pattern": pattern})
     order = {"반복 약점": 0, "처음 나온 유형": 1, "이번에만 틀림": 2}
     groups.sort(key=lambda g: (order[g["pattern"]], -len(g["wrong_items"])))
     state.last_student.setdefault(student_id, {}).update(wrong_groups=groups, exam_id=exam_id)
     n = sum(len(g["wrong_items"]) for g in groups)
-    rep = [g["desc"] for g in groups if g["pattern"] == "반복 약점"]
+    rep = [_std_label(g["standard"], 14) for g in groups if g["pattern"] == "반복 약점"]
     return {"exam_id": exam_id, "wrong_count": n, "groups": groups,
             "_summary": f"틀린 {n}문항을 성취기준 {len(groups)}묶음으로 정리"
                         + (f" · 반복 약점: {', '.join(rep)}" if rep else " · 반복 약점 없음")}
@@ -324,7 +418,8 @@ def group_wrong_answers(state: AcademyState, student_id: str, exam_id: str, reas
 
 FEEDBACK_SYSTEM = {
     "parent": "당신은 학원 국어 교사입니다. 학부모에게 자녀의 월말 학력평가 결과를 설명합니다. 정중한 '-습니다'체, "
-              "300자 안팎. 점수 변화, 잘한 점 1가지, 반복 약점과 다음 달 지도 계획을 주어진 분석에만 근거해 씁니다. 글만 출력합니다.",
+              "350자 안팎. 점수 변화(시험 난이도·측정오차를 고려한 해석 포함), 잘한 점 1가지, 반복 약점과 다음 달 지도 계획을 "
+              "주어진 분석에만 근거해 씁니다. 성취기준 코드는 쓰지 말고 쉬운 말로 풀어 씁니다. 글만 출력합니다.",
     "student": "당신은 학원 국어 선생님입니다. 중학생에게 학력평가 결과 피드백을 씁니다. 친근한 말투, 200자 안팎. "
                "칭찬 1가지, 반복해서 틀리는 유형 1~2가지와 구체적인 공부 방법을 주어진 분석에만 근거해 씁니다. 글만 출력합니다.",
 }
@@ -342,21 +437,28 @@ def write_student_feedback(state: AcademyState, student_id: str, audience: str, 
     strong = prof[-1]
     rep = [g for g in groups if g["pattern"] == "반복 약점"][:2] or groups[:1]
     if llm.online():
-        facts = {"이름": s["name"], "성적": h, "강한 성취기준": strong, "반복 약점": rep}
+        facts = {"이름": s["name"], "성적(원점수·T점수·백분위·측정오차)": h, "성적 변화 해석": d.get("history_read"),
+                 "강한 성취기준": strong, "반복 약점": rep}
         text = llm.complete_text(FEEDBACK_SYSTEM[audience], json.dumps(facts, ensure_ascii=False))
     else:
         change = (f"지난달보다 {abs(last['score'] - prev['score'])}점 {'올랐' if last['score'] >= prev['score'] else '내려갔'}"
                   if prev else "첫 시험이었")
-        weak_txt = ", ".join(f"'{g['desc']}'" for g in rep) if rep else "특별한 약점 없이 고르게"
+        read = d.get("history_read", "")
+        weak_txt = ", ".join(f"'{std_short(g['standard'])}'" for g in rep) if rep else "특별한 약점 없이 고르게"
+        strong_txt = std_short(strong["standard"])
         if audience == "parent":
             text = (f"안녕하십니까. {s['name']} 학생의 {last['month']} 국어 학력평가 결과를 알려 드립니다.\n"
-                    f"이번 점수는 {last['score']}점(반 평균 {last['class_avg']}점)으로 {change}습니다. "
-                    f"'{strong['desc']}' 영역은 반 평균보다 잘하고 있습니다.\n"
+                    f"이번 점수는 {last['score']}점(반 평균 {last['class_avg']}점, 반 안 백분위 {last['percentile']})으로 "
+                    f"{change}습니다. 매달 시험 난이도가 달라 반 안의 위치로 함께 보면, "
+                    + ("이 정도 차이는 시험 오차 범위 안이라 큰 변화는 아닙니다. " if "보기 어려움" in read else
+                       "점수 변화는 시험 난이도의 영향이 큽니다. " if "난이도" in read else
+                       "실제 실력 변화로 보입니다. ") +
+                    f"'{strong_txt}' 문제는 반 평균보다 잘 풀고 있습니다.\n"
                     f"다만 {weak_txt} 문제를 여러 달 반복해서 어려워하고 있어, 다음 달에는 이 유형의 유사 문제를 "
                     f"묶어 집중 지도하겠습니다. 가정에서도 격려 부탁드립니다. 감사합니다.")
         else:
             text = (f"{s['name']}, {last['month']} 학력평가 수고했어! 이번엔 {last['score']}점으로 {change}어. "
-                    f"'{strong['desc']}'는 정말 잘하고 있어 👍\n"
+                    f"'{strong_txt}' 문제는 정말 잘하고 있어 👍\n"
                     f"대신 {weak_txt} 문제를 자꾸 놓치고 있어. 틀린 문제랑 지난달 비슷한 문제를 묶어 줄 테니, "
                     f"왜 틀렸는지 한 줄씩 써 보면서 다시 풀어 보자 💪")
     d.setdefault("feedback", {})[audience] = text
@@ -394,6 +496,9 @@ _AUD = {"type": "string", "enum": ["parent", "student"], "description": "parent=
 TOOL_SCHEMAS = [
     {"name": "get_class_overview", "description": "반 학생 수와 학부모 언어(번역이 필요한 가정)를 확인한다.",
      "input_schema": _schema({"grade": {"type": "integer", "enum": [1, 2, 3]}}, ["grade"])},
+    {"name": "match_standards", "description": "교사가 적은 오늘 진도가 2022 개정 국어과 교육과정의 어느 중학교 성취기준과 연결되는지 찾는다. "
+                                               "학부모용 알림장을 쓰기 전에 쓴다.",
+     "input_schema": _schema({"text": {"type": "string", "description": "오늘 수업 진도"}}, ["text"])},
     {"name": "draft_notice", "description": "교사가 준 오늘 진도·숙제·앞으로의 진도로 학부모용 또는 학생용 알림장 초안을 쓴다.",
      "input_schema": _schema({"audience": _AUD, "class_name": {"type": "string"}, "today_progress": {"type": "string"},
                               "homework": {"type": "string"}, "next_plan": {"type": "string"}},
@@ -408,9 +513,15 @@ TOOL_SCHEMAS = [
      "input_schema": _schema({"audience": _AUD, "message": {"type": "string"}}, ["audience"])},
     {"name": "list_exams", "description": "학년의 월말 학력평가 목록을 본다.",
      "input_schema": _schema({"grade": {"type": "integer", "enum": [1, 2, 3]}}, ["grade"])},
-    {"name": "analyze_exam", "description": "시험의 문항별 정답률, 정답률 높은/낮은 문항, 매력적 오답, 성취기준별 정답률을 분석한다.",
+    {"name": "analyze_exam", "description": "시험의 문항난이도(정답률, 성태제 5단계 해석), 어려운/쉬운 문항, 성취기준별 정답률을 분석한다.",
      "input_schema": _schema({"exam_id": {"type": "string"}}, ["exam_id"])},
-    {"name": "student_history", "description": "학생의 지난 학력평가 점수·반 평균·등수 변화를 본다.",
+    {"name": "check_item_quality", "description": "고전검사이론으로 문항 품질을 점검한다: 변별도(문항-총점 상관, Ebel 기준), 추측도, "
+                                                  "교정 난이도, 오답지 매력도(매력적 오답·기능 상실 답지). analyze_exam 다음에 쓴다.",
+     "input_schema": _schema({"exam_id": {"type": "string"}}, ["exam_id"])},
+    {"name": "test_reliability", "description": "시험의 신뢰도(KR-20)와 측정의 표준오차를 계산한다. 점수 차이를 해석할 때 쓴다.",
+     "input_schema": _schema({"exam_id": {"type": "string"}}, ["exam_id"])},
+    {"name": "student_history", "description": "학생의 지난 학력평가 원점수, 반 평균, 등수, 반 안 위치(T점수·백분위) 변화를 보고, "
+                                               "측정의 표준오차와 시험 난이도 영향을 고려해 변화를 해석한다.",
      "input_schema": _schema({"student_id": {"type": "string"}}, ["student_id"])},
     {"name": "standard_profile", "description": "학생의 성취기준별 정답률을 반 평균과 비교해 약한/강한 성취기준을 찾는다.",
      "input_schema": _schema({"student_id": {"type": "string"}}, ["student_id"])},
@@ -428,9 +539,10 @@ TOOL_SCHEMAS = [
 TOOL_FUNCS = {t["name"]: globals()[t["name"]] for t in TOOL_SCHEMAS}
 
 TOOL_LABELS = {
-    "get_class_overview": "👥 반 정보 확인", "draft_notice": "✏️ 알림장 쓰기", "check_notice": "🔍 알림장 검사",
+    "get_class_overview": "👥 반 정보 확인", "match_standards": "📚 성취기준 연결", "draft_notice": "✏️ 알림장 쓰기", "check_notice": "🔍 알림장 검사",
     "translate_notice": "🌐 학부모 언어로 번역", "present_notice": "📒 알림장 보여주기",
-    "list_exams": "🗂️ 시험 목록", "analyze_exam": "📊 문항·성취기준 분석", "student_history": "📈 성적 추이",
+    "list_exams": "🗂️ 시험 목록", "analyze_exam": "📊 문항난이도·성취기준 분석",
+    "check_item_quality": "🔬 문항 품질 점검 (변별도·추측도·답지)", "test_reliability": "📐 신뢰도·측정오차", "student_history": "📈 성적 추이",
     "standard_profile": "🎯 성취기준별 강약점", "group_wrong_answers": "🧩 오답 묶기·유사 문항",
     "write_student_feedback": "💬 피드백 쓰기", "present_exam_report": "📄 시험 리포트 보여주기",
     "present_student_report": "📄 학생 리포트 보여주기",

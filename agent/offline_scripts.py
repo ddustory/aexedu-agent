@@ -68,9 +68,13 @@ def _fit_to_pocket(student_id: str, name: str, text: str):
     return text, cov, deferred
 
 
-def lesson_script(student_id: str, passage_text: str):
-    profile = (yield _call("get_student_profile", "학생의 모국어와 현재 지원 단계를 먼저 확인합니다.",
-                           student_id=student_id))[0]
+def lesson_script(student_id: str, passage_text: str, passage_id: str | None = None):
+    step = _call("get_student_profile", "학생의 모국어와 현재 지원 단계를 먼저 확인합니다.", student_id=student_id)
+    if passage_id:
+        link = (yield _call("get_curriculum_link", "이 지문이 어떤 국어과 성취기준과 이어지는지, 다문화 학습자 지도 지침은 "
+                                                   "무엇인지 교육과정에서 먼저 확인합니다.", passage_id=passage_id))[0]
+        step = _say(f"{', '.join(x['code'] for x in link['standards'])} 성취기준에 맞춘 '개별화 맞춤형' 자료를 만들겠습니다.", step)
+    profile = (yield step)[0]
     lang = profile["home_language"]
     level = yield from _ensure_level(student_id, profile)
     policy = SCAFFOLD_LEVELS[level]
