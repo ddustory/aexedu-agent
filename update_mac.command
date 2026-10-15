@@ -10,7 +10,7 @@ curl -fsSL https://github.com/ddustory/aexedu-agent/archive/refs/heads/main.zip 
   || { echo "❌ 내려받지 못했어요. 인터넷 연결을 확인해 주세요."; read -r; exit 1; }
 unzip -q "$TMP/main.zip" -d "$TMP"
 rsync -a --exclude '.venv312' --exclude '.env' "$TMP"/aexedu-agent-main/ ./
-chmod +x run_mac.command update_mac.command run_academy_mac.command
+chmod +x ./*.command
 rm -rf "$TMP"
 echo "✅ 최신 버전으로 바꿨어요. 시연 화면을 다시 엽니다."
 exec ./run_mac.command

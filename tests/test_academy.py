@@ -72,3 +72,8 @@ def test_notice_links_standards():
     st = T.AcademyState()
     r = T.match_standards(st, "소설의 갈등 구조, 품사의 분류")
     assert [x["code"] for x in r["standards"]] == ["[9국05-02]", "[9국04-03]"]
+
+
+def test_benchmark_module_imports():
+    from benchmark import run
+    assert run.DEFAULT_MODELS[0] == "qwen3:8b"

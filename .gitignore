@@ -6,3 +6,5 @@ venv/
 .streamlit/secrets.toml
 .DS_Store
 .venv312/
+
+benchmark/results/

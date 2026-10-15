@@ -62,6 +62,23 @@ def online() -> bool:
     return backend() is not None
 
 
+class LocalModelError(Exception):
+    """로컬 모델이 요청을 처리하지 못함 (예: 도구 호출을 지원하지 않는 모델)."""
+
+
+def _post_chat(body: dict) -> dict:
+    import urllib.error
+
+    req = urllib.request.Request(f"{LOCAL_URL}/api/chat", data=json.dumps(body).encode("utf-8"),
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=600) as r:
+            return json.load(r)["message"]
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")
+        raise LocalModelError(detail or str(e)) from None
+
+
 def local_chat(messages: list[dict], tools: list[dict] | None = None, system: str = "") -> dict:
     """Ollama 의 /api/chat 호출. 도구 목록을 주면 모델이 도구를 고른다."""
     body = {"model": LOCAL_MODEL, "stream": False, "think": False,
@@ -69,10 +86,19 @@ def local_chat(messages: list[dict], tools: list[dict] | None = None, system: st
             "messages": ([{"role": "system", "content": system}] if system else []) + messages}
     if tools:
         body["tools"] = tools
-    req = urllib.request.Request(f"{LOCAL_URL}/api/chat", data=json.dumps(body).encode("utf-8"),
-                                 headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=600) as r:
-        return json.load(r)["message"]
+    try:
+        msg = _post_chat(body)
+    except LocalModelError as e:
+        if "think" not in str(e).lower():
+            raise
+        body.pop("think")  # 생각 모드를 끌 수 없는 모델이면 옵션 없이 다시 보낸다
+        msg = _post_chat(body)
+    content = msg.get("content") or ""
+    if "<think>" in content:  # 생각 과정이 답에 섞여 나오면 지운다
+        import re
+
+        msg["content"] = re.sub(r"<think>.*?</think>", "", content, flags=re.S).strip()
+    return msg
 
 
 _client = None
