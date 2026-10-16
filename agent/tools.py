@@ -12,6 +12,7 @@ from . import data, llm
 from .config import (
     CHECK_DOWN_THRESHOLD,
     CHECK_UP_THRESHOLD,
+    DIAGNOSIS_RULE_TEXT,
     DIAGNOSIS_RULES,
     LANGUAGE_NAMES,
     READABILITY_MAX_AVG_EOJEOL,
@@ -93,7 +94,7 @@ def decide_scaffold_level(state: AgentState, student_id: str, score_percent: flo
     current = state.levels.get(student_id)
     if mode == "diagnosis" or current is None:
         new = next(level for threshold, level in DIAGNOSIS_RULES if score_percent >= threshold)
-        rule = (f"진단 정답률 {score_percent:.0f}% → 기준표(80% 이상 3단계 / 50% 이상 2단계 / 그 미만 1단계)에 따라 "
+        rule = (f"진단 정답률 {score_percent:.0f}% → 기준표({DIAGNOSIS_RULE_TEXT})에 따라 "
                 f"{new}단계로 시작")
         change = "시작"
     elif mode == "check":

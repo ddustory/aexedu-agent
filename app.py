@@ -7,7 +7,8 @@ import time
 import streamlit as st
 
 from agent import data, llm, service
-from agent.config import LANGUAGE_NAMES, SCAFFOLD_LEVELS
+from agent.config import (CHECK_DOWN_THRESHOLD, CHECK_UP_THRESHOLD, DIAGNOSIS_RULE_TEXT, LANGUAGE_NAMES,
+                          SCAFFOLD_LEVELS)
 from agent.tools import TOOL_LABELS, AgentState
 
 st.set_page_config(page_title="다문화 학습 지원 에이전트", page_icon="🌏", layout="wide")
@@ -74,8 +75,8 @@ with st.sidebar:
     with st.expander("단계 기준 보기"):
         for n, lv in SCAFFOLD_LEVELS.items():
             st.markdown(f"**{lv['name']}**  \n{lv['policy']}")
-        st.caption("진단: 80% 이상 3단계 / 50% 이상 2단계 / 그 미만 1단계\n\n"
-                   "확인 문제: 75% 이상 → 지원 줄이기, 50% 미만 → 지원 늘리기")
+        st.caption(f"진단: {DIAGNOSIS_RULE_TEXT}\n\n"
+                   f"확인 문제: {CHECK_UP_THRESHOLD}% 이상 → 지원 줄이기, {CHECK_DOWN_THRESHOLD}% 미만 → 지원 늘리기")
     if st.button("🔄 처음부터 다시 (단계 초기화)", use_container_width=True):
         st.session_state.agent_state = AgentState()
         st.session_state.runs = {}
