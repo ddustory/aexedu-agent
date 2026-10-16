@@ -21,7 +21,7 @@ def _say(text: str, step: Step) -> Step:
 
 TEACHER_NOTES = {
     1: "모국어 번역을 먼저 읽게 한 뒤, 쉬운 한국어 문장을 한 줄씩 함께 읽어 주세요. "
-       "어휘 카드의 그림을 가리키며 핵심어(증발·응결·강수)를 소리 내어 따라 하게 하면 좋습니다.",
+       "어휘 카드의 그림을 가리키며 핵심어({terms})를 소리 내어 따라 하게 하면 좋습니다.",
     2: "쉬운 한국어로 먼저 읽게 하고, 막히는 낱말만 어휘 카드의 모국어 뜻을 보게 해 주세요.",
     3: "원문을 그대로 읽되 괄호 풀이를 참고하게 해 주세요. 긴 문장은 쉼표 단위로 나눠 읽기를 권합니다.",
 }
@@ -54,7 +54,7 @@ def _fit_to_pocket(student_id: str, name: str, text: str):
             why.append(f"모르는 낱말 {len(cov['words_to_replace'])}개를 아는 말로 바꾸고")
         if cov["terms_to_defer"]:
             why.append(f"핵심 용어가 {len(cov['core_new_words'])}개라 기준({MAX_NEW_WORDS}개)에 맞게 "
-                       f"{', '.join(cov['terms_to_keep'])}만 오늘 가르치고 {', '.join(cov['terms_to_defer'])}는 쉬운 말로 풀어")
+                       f"{', '.join(cov['terms_to_keep'])}만 오늘 가르치고 {data.topic(', '.join(cov['terms_to_defer']))} 쉬운 말로 풀어")
         ad = (yield _say("기준에 못 미쳐요. " + ", ".join(why) + " 다시 쓰겠습니다.",
                          _call("adapt_to_pocket", f"{name}의 낱말 주머니에 맞춰 글을 고칩니다.",
                                student_id=student_id, text=text, words_to_replace=cov["words_to_replace"],
@@ -119,7 +119,7 @@ def lesson_script(student_id: str, passage_text: str, passage_id: str | None = N
         native = (yield _call("translate_text", f"1단계 학생이므로 쉬운 한국어 전체를 {LANGUAGE_NAMES[lang]}로 나란히 제공합니다.",
                               text=display, language=lang))[0]["translation"]
 
-    note = TEACHER_NOTES[level]
+    note = TEACHER_NOTES[level].replace("{terms}", "·".join(words[:3]) or "오늘 배울 낱말")
     if deferred:
         note += (f" ※ 새 낱말 기준({MAX_NEW_WORDS}개)에 맞춰 {data.topic(chr(39) + '·'.join(deferred) + chr(39))} 오늘 용어 없이 쉬운 말로만 풀었어요. "
                  "다음 수업의 새 낱말로 가르쳐 주세요.")
@@ -128,7 +128,7 @@ def lesson_script(student_id: str, passage_text: str, passage_id: str | None = N
                 vocab_cards=cards, teacher_note=note)
 
     yield Step(texts=[
-        f"{profile['name']} 학생을 위해 {policy['name']} 학습 자료를 만들었습니다. "
+        f"{profile['name'].split(' ')[0]} 학생을 위해 {policy['name']} 학습 자료를 만들었습니다. "
         f"원문(평균 {orig['avg_eojeol_per_sentence']}어절/문장)을 {name}의 낱말 주머니로 재고 맞춰 "
         f"아는 낱말 {cov['coverage']}%·새 낱말 {len(cov['new_words'])}개가 되게 하고, "
         f"핵심 낱말 {len(cards)}개를 {LANGUAGE_NAMES[lang]} 어휘 카드로 붙였습니다."
@@ -228,7 +228,12 @@ def personal_script(student_id: str, text: str, ease_step: int):
            else "네가 아는 말로 바꿔 봤어요. 그래도 어려우면 '좀 더 쉽게'를 눌러요!")
     yield _call("present_personalized", "바뀐 곳을 표시해서 원래 글과 함께 보여줍니다.",
                 student_id=student_id, original_text=text, message=msg)
-    yield Step(texts=[f"{profile['name']} 학생의 낱말 수준에 맞춰 {n}곳을 바꿨습니다"
+    who = profile["name"].split(" ")[0]
+    if n == 0 and not done["explained_terms"]:
+        yield Step(texts=[f"{who} 학생은 이 글의 낱말을 이미 거의 알고 있어서 바꿀 곳이 없었습니다. "
+                          "같은 글이라도 낱말 수준이 낮은 학생에게는 여러 곳이 바뀝니다."])
+        return
+    yield Step(texts=[f"{who} 학생의 낱말 수준에 맞춰 {n}곳을 바꿨습니다"
                       + (f"(핵심 용어 {len(done['explained_terms'])}개에는 풀이를 붙였습니다)" if done["explained_terms"] else "")
                       + ". 같은 글이라도 다른 학생에게는 다르게 바뀝니다."])
 
@@ -242,7 +247,7 @@ def peer_script(student_id: str, mode: str):
                         _call("find_peer_group", "수준과 학년이 비슷한 또래를 전국 연결망에서 찾습니다.",
                               student_id=student_id, mode=mode)))[0]
     local = found["local_candidates"]
-    msg = (f"{profile['name']} 학생과 같은 지역에서는 조건에 맞는 친구가 "
+    msg = (f"{profile['name'].split(' ')[0]} 학생과 같은 지역에서는 조건에 맞는 친구가 "
            + ("한 명도 없었지만" if local == 0 else f"{local}명뿐이었지만")
            + f", 지역을 넘으니 {found['nationwide_candidates']}명 중에서 고를 수 있었어요.")
     yield _call("present_peer_group", "만든 모둠과 함께 할 활동을 교사에게 보여줍니다.",

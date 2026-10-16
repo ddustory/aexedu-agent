@@ -66,11 +66,19 @@ def target_terms() -> list[str]:
     return out
 
 
+def _last_hangul(word: str) -> str:
+    """조사를 고를 때 볼 마지막 글자 (따옴표·괄호 같은 문장부호는 건너뛴다)."""
+    for c in reversed(word or ""):
+        if c.isalnum():
+            return c
+    return ""
+
+
 def subj(name: str) -> str:
     """이름 뒤에 '이/가'를 알맞게 붙인다 (린 → 린이, 바트 → 바트가)."""
     if not name:
         return name
-    c = name[-1]
+    c = _last_hangul(name)
     if "\uac00" <= c <= "\ud7a3":
         return name + ("이" if (ord(c) - 0xAC00) % 28 else "가")
     return name + "가"
@@ -78,7 +86,7 @@ def subj(name: str) -> str:
 
 def topic(word: str) -> str:
     """낱말 뒤에 '은/는'을 알맞게 붙인다."""
-    c = word[-1] if word else ""
+    c = _last_hangul(word)
     if "\uac00" <= c <= "\ud7a3":
         return word + ("은" if (ord(c) - 0xAC00) % 28 else "는")
     return word + "는"

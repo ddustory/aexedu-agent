@@ -651,7 +651,8 @@ def check_coverage(state: AgentState, student_id: str, text: str, reason: str = 
     return {
         **{k: v for k, v in a.items() if k != "items"},
         "_summary": (f"{verdict} · 아는 낱말 {a['coverage']}% (기준 {COVERAGE_MIN}%) · 새 낱말 {len(a['new_words'])}개 "
-                     f"(기준 {MAX_NEW_WORDS}개)" + (f": {', '.join(a['new_words'][:6])}" if a["new_words"] else "")
+                     f"(기준 {MAX_NEW_WORDS}개)" + (f": {', '.join(a['new_words'][:6])}" + (f" 외 {len(a['new_words']) - 6}개" if len(a["new_words"]) > 6 else "")
+                                           if a["new_words"] else "")
                      + (f" · 오늘은 미룰 핵심 용어: {', '.join(a['terms_to_defer'])}" if not a["passed"] and a["terms_to_defer"] else "")),
     }
 

@@ -225,14 +225,21 @@ def run_agent(brain, state, executor=None, errors=(ToolError,)) -> Iterator[dict
 
 # ── 목표(goal) 문장 만들기 ────────────────────────────────────────
 
+def _who(student_id: str) -> str:
+    """목표 문장에 쓸 학생 표시: '린 학생(S01)' (뒤에 붙는 조사는 '학생'에 맞춘다)."""
+    from . import data
+    s = data.student(student_id)
+    return f"{s['display_name'].split(' ')[0]} 학생({student_id})" if s else f"학생({student_id})"
+
+
 def goal_lesson(student_id: str, passage_text: str, passage_id: str | None) -> str:
     src = f"(지문 ID: {passage_id})" if passage_id else "(교사가 직접 입력한 지문)"
-    return (f"학생 {student_id} 를 위해 아래 지문으로 오늘 수업 학습 자료를 만들어 주세요. {src}\n\n"
+    return (f"{_who(student_id)}을 위해 아래 지문으로 오늘 수업 학습 자료를 만들어 주세요. {src}\n\n"
             f"[지문]\n{passage_text}")
 
 
 def goal_question(student_id: str, question: str) -> str:
-    return (f"수업 중 학생 {student_id} 가 모국어로 이렇게 질문했습니다:\n\"{question}\"\n"
+    return (f"수업 중 {_who(student_id)}이 모국어로 이렇게 질문했습니다:\n\"{question}\"\n"
             f"오늘 수업 내용(물의 순환)과 연결해, 쉬운 한국어와 학생 모국어로 함께 답해 주세요. "
             f"답에 나오는 핵심 낱말은 어휘 카드로 붙여 주세요.\n"
             f"(순서: get_student_profile → get_word_pocket → answer_student_question 으로 한국어 답 → check_coverage → "
@@ -241,27 +248,27 @@ def goal_question(student_id: str, question: str) -> str:
 
 
 def goal_teacher_sentence(student_id: str, sentence: str) -> str:
-    return (f"교사가 수업 중 아래 문장으로 설명했습니다. 학생 {student_id} 가 이해할 수 있게 "
+    return (f"교사가 수업 중 아래 문장으로 설명했습니다. {_who(student_id)}이 이해할 수 있게 "
             f"한국어와 모국어를 나란히 보여 주세요. 어려운 낱말이 있으면 어휘 카드도 붙여 주세요.\n\"{sentence}\"")
 
 
 def goal_fading(student_id: str, passage_id: str, results: list[bool]) -> str:
     marks = ", ".join(f"{i + 1}번 {'맞음' if r else '틀림'}" for i, r in enumerate(results))
-    return (f"학생 {student_id} 의 수업 후 확인 문제 결과입니다 (지문 {passage_id}): {marks}.\n"
+    return (f"{_who(student_id)}의 수업 후 확인 문제 결과입니다 (지문 {passage_id}): {marks}.\n"
             f"결과를 채점해 비계 단계를 조정하고, 다음 수업 지원 계획을 교사에게 보여 주세요.")
 
 
 def goal_personal(student_id: str, text: str, ease_step: int) -> str:
     if ease_step == 0:
-        head = (f"학생 {student_id} 에게 아래 글을 보여주려 합니다. 이 학생이 아는 낱말로 맞춰 주세요. "
+        head = (f"{_who(student_id)}에게 아래 글을 보여주려 합니다. 이 학생이 아는 낱말로 맞춰 주세요. "
                 f"(ease_step=0)")
     else:
-        head = (f"학생 {student_id} 가 \"좀 더 쉽게 설명해 주세요\"라고 했습니다 ({ease_step}번째 요청, ease_step={ease_step}). "
+        head = (f"{_who(student_id)}이 \"좀 더 쉽게 설명해 주세요\"라고 했습니다 ({ease_step}번째 요청, ease_step={ease_step}). "
                 f"아래 글을 이 학생이 아는 말로 더 쉽게 맞춰 주세요.")
     return f"{head}\n\n[글]\n{text}"
 
 
 def goal_peer(student_id: str, mode: str) -> str:
     kind = "같은 모국어를 쓰는 친구" if mode == "same_language" else "모국어가 서로 달라 한국어로 대화하게 되는 친구"
-    return (f"학생 {student_id} 와 한국어 수준이 비슷한 또래를 지역과 상관없이 찾아 4명 모둠을 만들어 주세요. "
+    return (f"{_who(student_id)}과 한국어 수준이 비슷한 또래를 지역과 상관없이 찾아 4명 모둠을 만들어 주세요. "
             f"이번에는 '{kind}'로 묶어 주세요 (mode={mode}).")
